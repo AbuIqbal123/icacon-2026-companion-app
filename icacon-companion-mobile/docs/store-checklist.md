@@ -1,108 +1,200 @@
 # App Store & Play Store — production checklist
 
-Use this before submitting. The app is an offline-first conference companion with **no login**, **no analytics**, and **no sensitive permissions**.
+## Will this pass Apple review?
 
-## Fixed in code (this review)
+**Yes — with conditions.** The app is a solid offline-first conference companion (programme, PDFs, contacts, maps links). That meets **minimum functionality** when content is real.
 
-- [x] `tel:` / `mailto:` work offline (not blocked by network check)
-- [x] External https / Maps require network with clear alert
-- [x] Bundled PDFs (brochure, day1, day2) offline
-- [x] Android PDF opens via system viewer (WebView PDF is unreliable on Android)
-- [x] iOS PDF preview in-app + Share
-- [x] `ITSAppUsesNonExemptEncryption: false` (export compliance)
-- [x] `NSPrivacyTracking: false` + empty collected data types
-- [x] Blocked unused Android permissions (location, camera, mic, contacts, media)
-- [x] `allowBackup: false` on Android
-- [x] Portrait-only, iPhone-only (no iPad layout required yet)
-- [x] Dead Expo template code removed
-- [x] No analytics / tracking SDKs (Vexo removed; privacy story matches binary)
-- [x] Version `1.0.0` / iOS build `1` / Android `versionCode` `1`
+### Must not ship (would fail 2.1 Completeness)
 
-## You must complete before submit
+| Issue | Status |
+|---|---|
+| Fake participant list + “coming soon” | **Removed** for store |
+| Placeholder / incomplete features advertised | Do not re-add until data is real |
+| Privacy policy URL not live | **Live:** https://abuiqbal123.github.io/icacon-privacy/ |
+| Production build with Expo Dev Launcher strings | **Stripped** via plugin + Info.plist |
 
-### Accounts & identity
+### App Privacy labels (App Store Connect)
 
-- [ ] Apple Developer Program enrollment
-- [ ] Google Play Console enrollment
-- [ ] Confirm bundle ID / package: `com.icacon.companion` (or change before first release)
-- [ ] App signing keys / EAS credentials configured (`eas build`)
+- **Data Not Collected**
+- **Tracking:** No  
+- Matches binary: no analytics SDKs
 
-### Privacy policy (required by both stores)
+### Export compliance
 
-Host `docs/privacy.md` on a public HTTPS URL, e.g.:
+- `ITSAppUsesNonExemptEncryption: false` (HTTPS only)
 
-- `https://www.icaconaligarh.com/app-privacy`  
-  or GitHub Pages / a simple static page
+### Review notes tip (optional in App Store Connect)
 
-Then set that URL in:
+> Offline conference companion. No login. Test maps with network on; PDFs and programme work offline. Support: icacon2026@gmail.com
 
-- App Store Connect → App Privacy / Privacy Policy URL  
-- Play Console → Store listing → Privacy policy  
+---
 
-### Store listings
+## Fixed in code
 
-Use `docs/store-listing.md` for copy. Capture screenshots on:
+- [x] No fake participants in UI  
+- [x] Offline programme + PDFs + contacts  
+- [x] Maps / web need network with clear alert  
+- [x] Android PDF VIEW intent + queries; Share only on explicit fallback  
+- [x] Encryption flag + privacy manifest  
+- [x] Blocked unused Android permissions  
+- [x] Store-ready iOS plugin (no Dev Launcher local network copy)  
+- [x] Release minify/shrink for Android  
 
-- iPhone 6.7" (or current required sizes)
-- Android phone (and 7"/10" tablet only if you declare tablet support)
+## You complete before submit
 
-### Content review risk
+- [ ] Apple Developer Program  
+- [x] Host privacy policy HTTPS — https://abuiqbal123.github.io/icacon-privacy/  
+- [ ] App Store Connect privacy labels + support URL  
+- [x] **iOS listing copy** — `docs/app-store-listing-copy.md` + `store.config.json`  
+- [x] **iOS iPhone 6.9" screenshots** — `docs/app-store-assets/screenshots-iphone-6.9/` (5 shots, 1320×2868)  
+- [x] **iOS iPad 13" screenshots** — `docs/app-store-assets/screenshots-ipad-13/` (Home + Navigate; optional while `supportsTablet: false`)  
+- [x] **Android screenshots** — `docs/play-store-assets/`  
+- [ ] `eas build --profile production --platform ios` (not development/preview for store)  
+- [ ] Official day1/day2 PDFs if current files are drafts  
 
-| Item | Status | Note |
-|------|--------|------|
-| Incomplete Navigate (no indoor map yet) | OK if honest | Screen explains maps + outdoor Maps links |
-| Demo / placeholder content | Avoid | Do not ship fake Wi‑Fi passwords or invented rooms |
-| Official PDFs | Included | brochure + day1 + day2 |
-| Support contact | `icacon2026@gmail.com` | Must respond during review |
+### iOS App Store Connect (summary)
 
-### Build commands
+| Item | Where |
+|---|---|
+| Name / subtitle / description / keywords | `docs/app-store-listing-copy.md` |
+| **Copyright** (App Information — required) | `2026 ICACON Aligarh` |
+| Metadata push (optional) | `store.config.json` → `eas metadata:push` after first binary |
+| Privacy policy | https://abuiqbal123.github.io/icacon-privacy/ |
+| Support URL | https://www.icaconaligarh.com |
+| Bundle ID | `com.icacon.companion` |
+| Tablet screenshots | Only required if `ios.supportsTablet` is true (currently **false**) |
 
-```bash
-cd icacon-companion-mobile
-npx tsc --noEmit
-eas build --profile production --platform android   # AAB
-eas build --profile production --platform ios       # IPA
-```
-
-Development builds (native app + hot reload; not for store):
-
-```bash
-eas build --profile development --platform android
-eas build --profile development --platform ios
-eas build --profile development-simulator --platform ios   # Mac Simulator only
-npx expo start --dev-client
-```
-
-Preview installs for QA (standalone, no dev menu):
+## Build (store)
 
 ```bash
-eas build --profile preview --platform android
-eas build --profile preview --platform ios
+npm run typecheck
+eas build --profile production --platform ios
+eas build --profile production --platform android
 ```
 
-### QA before upload (airplane mode + online)
+Use **production** profile only for store — not `development` (dev client) or `preview` (internal QA).
 
-1. Cold start offline — Home, Programme list, Info contacts  
-2. Open brochure / Day 1 / Day 2 offline  
-3. Tap phone / email offline — dialer / mail open  
-4. Website / Register / Maps online — open correctly  
-5. Website / Maps offline — friendly “no internet” alert  
-6. Tab bar clears home indicator (iPhone)  
-7. No crashes on rapid tab switching  
+## QA (airplane + online)
 
-### Play Data safety form
+1. Cold start offline — Home, Programme, Info, Navigate list  
+2. PDFs offline  
+3. Phone / email offline  
+4. Website / Register / Maps online  
+5. Maps offline — “no internet” alert  
+6. No crashes switching tabs  
+
+## Play Data safety
 
 - Data collected: **No**  
 - Data shared: **No**  
-- Security practices: data encrypted in transit (HTTPS for external links only)
 
-### App Store privacy labels
+---
 
-- Data Not Collected  
-- Tracking: No  
+## Google Play — path to production (personal / new accounts)
 
-## Known non-blockers
+Google requires setup + **closed testing** before production. Internal testing is optional.
 
-- Adaptive icon uses full-bleed mark (acceptable; can refine with transparent logo later)
-- Splash image is smaller than icon (contain on brand colour is fine)
-- Indoor navigation is deferred — outdoor Maps covers venues for v1
+### 1. Finish setting up your app (Dashboard)
+
+Complete every incomplete task under **Dashboard → Set up your app** (names vary slightly):
+
+| Task | What to put for ICACON |
+|---|---|
+| **App access** | All features without login |
+| **Ads** | No |
+| **Content ratings** | IARC questionnaire — conference info app |
+| **Target audience** | Adults / not primarily children |
+| **News app** | No |
+| **COVID-19 contact tracing / status** | No |
+| **Data safety** | No data collected, no data shared |
+| **Government apps** | No (unless you declare otherwise) |
+| **Financial features** | No |
+| **Health** | Not a clinical/medical device app — event companion only |
+| **Privacy policy** | https://abuiqbal123.github.io/icacon-privacy/ |
+| **Store listing** | Title, short + full description, icon, feature graphic, screenshots, category, contact email |
+
+Store listing draft: `docs/store-listing.md`.
+
+**Screenshots (Android):** at least phone; 2–8 screens showing Home, Programme, PDF, Info, Navigate.  
+**Feature graphic:** 1024 × 500 px (required for store listing).
+
+### 2. Internal testing (optional, same day)
+
+Use for your own devices / a few trusted people **before** closed test is ready.
+
+1. **Testing → Internal testing → Create new release**
+2. Upload a **production AAB** (not debug APK, not Expo Go):
+
+```bash
+npm run typecheck
+eas build --profile production --platform android
+# After build finishes:
+eas submit --platform android --latest
+# Or upload the .aab manually in Play Console
+```
+
+3. Add testers (email list or Google Group) → **Save** → **Review release** → **Start rollout to Internal testing**
+4. Testers open the opt-in link on an Android device, install from Play Store
+
+Internal builds are often available within minutes. This does **not** replace closed testing.
+
+### 3. Closed testing (required for production access)
+
+Criteria Google shows on the dashboard:
+
+- [ ] Publish a **closed testing** release (AAB on a closed track)
+- [ ] **≥ 12 testers opted in** (not just invited — they must accept the test)
+- [ ] Test runs **≥ 14 consecutive days** with that bar met
+- [ ] Then **Apply for production** and answer closed-test questions
+
+**How to run it**
+
+1. Finish setup (step 1) so closed testing unlocks  
+2. **Testing → Closed testing → Create track** (or use default *Closed testing - Alpha*)  
+3. Create a release with the **same production AAB** (or a newer production build)  
+4. **Testers** tab → email list / Google Group with **at least 12 people** who will actually install  
+5. Share the **opt-in URL**; each person must:
+   - Open the link while signed into Play with that Google account  
+   - Accept to become a tester  
+   - Install the app from Play  
+6. Keep the closed release **active for 14+ days** while ≥12 stay opted in  
+7. Collect light feedback (bugs, crashes, listing accuracy)
+
+**Finding 12 testers for ICACON**
+
+Colleagues, department staff, organising committee, volunteers, friends with Android phones. A **Google Group** is easiest to manage (add emails once; people join the group then opt in).
+
+Testers only need a normal Google account + Android device. They do **not** need a developer account.
+
+### 4. Apply for production
+
+After the closed-test criteria are green:
+
+1. Dashboard → **Apply for production** (or Production → apply)  
+2. Answer questions about who tested, what feedback you got, how you fixed issues  
+3. Create a **Production** release (same or newer AAB), submit for review  
+
+Honest short answers work, e.g.:
+
+> Closed test with organising committee and volunteers (≥12). Testers used offline programme, PDFs, contacts, and maps links. Feedback: [brief]. Issues fixed: [or none critical].
+
+### Build rules for Play
+
+| Profile | Use for Play? |
+|---|---|
+| `production` (`app-bundle`) | **Yes** — internal, closed, production |
+| `preview` / `development` APK | No — not for Play tracks |
+| Local debug APK | No |
+
+```bash
+eas build --profile production --platform android
+eas submit --platform android --latest   # needs Play service account or manual upload
+```
+
+### Parallel: keep polishing while the 14 days run
+
+- Official day1/day2 PDFs if still drafts  
+- Screenshots + feature graphic  
+- Any crash fixes → new production build → new closed release (versionCode auto-increments)  
+- Do **not** pause/end the closed track early if you need the 14-day clock  
+

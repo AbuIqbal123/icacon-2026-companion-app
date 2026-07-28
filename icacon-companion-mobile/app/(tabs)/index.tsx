@@ -1,6 +1,7 @@
 import { router } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import { Image, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Calendar, ChevronRight, Compass, Info, MapPin } from 'lucide-react-native'
 import { EVENT_META, LINKS } from '@/src/data/events'
 import { LOGOS } from '@/src/data/logos'
@@ -8,10 +9,15 @@ import { colors } from '@/src/theme/colors'
 import { openExternal } from '@/src/lib/linking'
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets()
+
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <View style={styles.safe}>
+      {/* White clock/battery on brown hero */}
+      <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <View style={styles.hero}>
+        {/* Brown extends under the notch; content sits below the status bar. */}
+        <View style={[styles.hero, { paddingTop: insets.top + 12 }]}>
           <View style={styles.logoRow}>
             <Image
               source={LOGOS.icacon}
@@ -69,8 +75,8 @@ export default function HomeScreen() {
               <Compass size={22} color={colors.brand} strokeWidth={2} />
             </View>
             <View style={styles.navCopy}>
-              <Text style={styles.navTitle}>JNMC Navigation</Text>
-              <Text style={styles.navSub}>JNMC workshop venues</Text>
+              <Text style={styles.navTitle}>Navigate</Text>
+              <Text style={styles.navSub}>Directions to event places</Text>
             </View>
             <ChevronRight size={20} color={colors.inkMuted} />
           </Pressable>
@@ -108,7 +114,7 @@ export default function HomeScreen() {
           </Pressable>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
   hero: {
     backgroundColor: colors.brand,
     paddingHorizontal: 22,
-    paddingTop: 20,
+    // paddingTop set dynamically so brand color fills under the notch
     paddingBottom: 44,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,

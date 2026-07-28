@@ -25,7 +25,7 @@
       }
     },
     "android": {
-      "package": "com.icacon.companion",
+      "package": "com.icacon2026.companion",
       "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#863419",
@@ -55,6 +55,8 @@
       "expo-router",
       "expo-asset",
       "expo-sharing",
+      "./plugins/withAndroidPdfQuery.js",
+      "./plugins/withStoreReadyIos.js",
       [
         "expo-splash-screen",
         {

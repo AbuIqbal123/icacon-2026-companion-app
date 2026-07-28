@@ -32,12 +32,19 @@
     },
     "production": {
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "credentialsSource": "local"
       },
       "autoIncrement": true
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "track": "alpha",
+        "releaseStatus": "draft",
+        "changesNotSentForReview": true
+      }
+    }
   }
 }

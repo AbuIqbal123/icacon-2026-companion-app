@@ -1,14 +1,13 @@
-import { useMemo, useState } from 'react'
 import {
   Image,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
 import {
   BookOpen,
   Calendar,
@@ -16,12 +15,12 @@ import {
   FileText,
   Globe,
   MapPin,
+  Shield,
   type LucideIcon,
   UserPlus,
 } from 'lucide-react-native'
 import { router } from 'expo-router'
 import { EVENT_META, LINKS, OFFLINE_INFO } from '@/src/data/events'
-import { PARTICIPANTS } from '@/src/data/participants'
 import { LOGOS } from '@/src/data/logos'
 import { colors } from '@/src/theme/colors'
 import { openExternal, openMail, openTel, openVenuePicker } from '@/src/lib/linking'
@@ -119,67 +118,13 @@ function ContactCard({
   )
 }
 
-function ParticipantsSection() {
-  const [query, setQuery] = useState('')
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return PARTICIPANTS
-    return PARTICIPANTS.filter((p) => {
-      const hay = `${p.name} ${p.hall} ${p.screen}`.toLowerCase()
-      return hay.includes(q)
-    })
-  }, [query])
-
-  return (
-    <>
-      <SectionLabel>Participants</SectionLabel>
-      <Group>
-        <View style={styles.searchWrap}>
-          <TextInput
-            value={query}
-            onChangeText={setQuery}
-            placeholder="Search name, hall, or screen"
-            placeholderTextColor={colors.inkMuted}
-            style={styles.searchInput}
-            autoCorrect={false}
-            autoCapitalize="none"
-            clearButtonMode="while-editing"
-            returnKeyType="search"
-          />
-        </View>
-        <Divider inset={0} />
-        {filtered.length === 0 ? (
-          <Text style={styles.emptyText}>No participants match.</Text>
-        ) : (
-          filtered.map((p, index) => (
-            <View key={p.id}>
-              {index > 0 ? <Divider inset={16} /> : null}
-              <View style={styles.participantRow}>
-                <Text style={styles.participantName}>{p.name}</Text>
-                <Text style={styles.participantMeta}>
-                  {p.hall} · Screen {p.screen}
-                </Text>
-              </View>
-            </View>
-          ))
-        )}
-        <View style={styles.participantNoteWrap}>
-          <Text style={styles.participantNote}>
-            Placeholder list — official assignments coming soon.
-          </Text>
-        </View>
-      </Group>
-    </>
-  )
-}
-
 export default function InfoScreen() {
   const s = OFFLINE_INFO.secretariat
   const r = OFFLINE_INFO.registrationContact
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
+      <StatusBar style="dark" />
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
@@ -242,8 +187,6 @@ export default function InfoScreen() {
           />
         </Group>
 
-        <ParticipantsSection />
-
         <SectionLabel>Secretariat</SectionLabel>
         <Group>
           <ContactCard
@@ -287,6 +230,16 @@ export default function InfoScreen() {
               </Text>
             ))}
           </View>
+        </Group>
+
+        <SectionLabel>Legal</SectionLabel>
+        <Group>
+          <NavRow
+            icon={Shield}
+            label="Privacy policy"
+            onPress={() => openExternal(LINKS.privacy)}
+            last
+          />
         </Group>
 
         <Text style={styles.footer}>{EVENT_META.organisedBy}</Text>
@@ -418,52 +371,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.ink,
     paddingVertical: 2,
-  },
-
-  searchWrap: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  searchInput: {
-    backgroundColor: colors.surface,
-    borderRadius: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 15,
-    color: colors.ink,
-  },
-  participantRow: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 4,
-  },
-  participantName: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: colors.ink,
-  },
-  participantMeta: {
-    fontSize: 13,
-    color: colors.inkMuted,
-  },
-  emptyText: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    fontSize: 14,
-    color: colors.inkMuted,
-  },
-  participantNoteWrap: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.border,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  participantNote: {
-    fontSize: 12,
-    color: colors.inkMuted,
-    lineHeight: 16,
   },
 
   hostsRow: {

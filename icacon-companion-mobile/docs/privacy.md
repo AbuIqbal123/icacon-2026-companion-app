@@ -1,12 +1,13 @@
 # Privacy Policy — ICACON 2026 Companion
 
-**Last updated:** 2026-07-22  
-**App:** ICACON 2026 Companion (`com.icacon.companion`)  
+**Last updated:** 2026-07-23  
+**App:** ICACON 2026 Companion (Android: `com.icacon2026.companion`)  
 **Contact:** icacon2026@gmail.com  
+**Public URL (App Store / Play):** https://abuiqbal123.github.io/icacon-privacy/
 
 ## Overview
 
-ICACON 2026 Companion is a free event information app for the ICACON 2026 conference in Aligarh. It is designed to work offline and does **not** require users to create an account.
+ICACON 2026 Companion is a free event information app for the ICACON 2026 conference in Aligarh. Core content works offline and the app does **not** require users to create an account.
 
 ## Data we collect
 
@@ -28,10 +29,11 @@ ICACON 2026 Companion is a free event information app for the ICACON 2026 confer
 If you choose to open:
 
 - the official website,  
-- online registration, or  
+- online registration,  
+- Google Maps / Maps directions, or  
 - other links listed in the app,  
 
-those pages are provided by third parties (for example icaconaligarh.com or the registration provider). Their privacy policies apply when you visit them. The app only opens those links when you tap them and when a network connection is available.
+those pages or apps are provided by third parties (for example icaconaligarh.com, the registration provider, or Google Maps). Their privacy policies apply when you visit them. The app only opens those links when you tap them and when a network connection is available. The app does not track your location in the background.
 
 ## Phone and email
 

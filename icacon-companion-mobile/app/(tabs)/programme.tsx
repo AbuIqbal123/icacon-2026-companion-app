@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
 import { router } from 'expo-router'
 import { ChevronRight, FileText, Globe, MapPin } from 'lucide-react-native'
 import { EVENT_DAYS, LINKS, WORKSHOP_DAY, WORKSHOPS } from '@/src/data/events'
@@ -14,7 +15,16 @@ const TAB_LABEL: Record<EventDayId, string> = {
   day2: '13 Sept',
 }
 
-function VenueRow({ name, mapsUrl }: { name: string; mapsUrl: string }) {
+function VenueRow({
+  name,
+  mapsUrl,
+  detail,
+}: {
+  name: string
+  mapsUrl: string
+  /** Optional second line; omit for a single-line row */
+  detail?: string
+}) {
   return (
     <Pressable
       onPress={() => openExternal(mapsUrl)}
@@ -25,7 +35,7 @@ function VenueRow({ name, mapsUrl }: { name: string; mapsUrl: string }) {
       </View>
       <View style={styles.venueCopy}>
         <Text style={styles.venueName}>{name}</Text>
-        <Text style={styles.venueAction}>Open in Google Maps</Text>
+        {detail ? <Text style={styles.venueAction}>{detail}</Text> : null}
       </View>
       <ChevronRight size={18} color={colors.inkMuted} />
     </Pressable>
@@ -78,6 +88,7 @@ export default function ProgrammeScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
+      <StatusBar style="dark" />
       <View style={styles.header}>
         <Text style={styles.title}>Programme</Text>
 
@@ -140,26 +151,61 @@ export default function ProgrammeScreen() {
 
             <View style={styles.list}>
               {WORKSHOPS.map((w, index) => (
-                <View
+                <Pressable
                   key={w.id}
-                  style={[styles.row, index < WORKSHOPS.length - 1 && styles.rowBorder]}
+                  onPress={() => openExternal(w.mapsUrl)}
+                  style={({ pressed }) => [
+                    styles.row,
+                    index < WORKSHOPS.length - 1 && styles.rowBorder,
+                    pressed && { opacity: 0.9 },
+                  ]}
                 >
-                  <Text style={styles.workshopTitle}>{w.title}</Text>
-                  {w.director ? (
-                    <Text style={styles.director}>{w.director}</Text>
-                  ) : null}
-                </View>
+                  <View style={styles.workshopRow}>
+                    <View style={styles.workshopCopy}>
+                      <Text
+                        style={styles.workshopTitle}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.8}
+                      >
+                        {w.title}
+                      </Text>
+                      {w.director ? (
+                        <Text style={styles.director}>{w.director}</Text>
+                      ) : null}
+                      {/* Only call out the non-default site (two short lines, not one wrap) */}
+                      {!w.sharedSite ? (
+                        <View style={styles.workshopVenueBlock}>
+                          <Text style={styles.workshopVenue}>{w.venueLabel}</Text>
+                          {w.venueNote ? (
+                            <Text style={styles.workshopVenueNote}>{w.venueNote}</Text>
+                          ) : null}
+                        </View>
+                      ) : null}
+                    </View>
+                    <ChevronRight
+                      size={18}
+                      color={colors.inkMuted}
+                      style={styles.workshopChevron}
+                    />
+                  </View>
+                </Pressable>
               ))}
             </View>
 
-            <Text style={styles.footnote}>
-              Seats: first come, first served. Conference registration required.
-              Fee {WORKSHOP_DAY.fee} each (incl. 18% GST).
-            </Text>
-
-            <Text style={styles.blockLabel}>Venue</Text>
+            <Text style={styles.blockLabel}>Locations</Text>
             <View style={styles.venueCard}>
-              <VenueRow name={day.venue} mapsUrl={day.mapsUrl} />
+              <VenueRow
+                name="Paramedical College"
+                detail="Main workshops"
+                mapsUrl={WORKSHOPS.find((w) => w.sharedSite)!.mapsUrl}
+              />
+              <View style={styles.venueDivider} />
+              <VenueRow
+                name="Surgery OT Complex"
+                detail="Near Dept of Anaesthesia · USG Regional"
+                mapsUrl={WORKSHOPS.find((w) => w.id === 'blocks')!.mapsUrl}
+              />
             </View>
 
             <Resources />
@@ -260,24 +306,40 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
   },
+  workshopRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  workshopCopy: { flex: 1, minWidth: 0, paddingRight: 4 },
+  workshopChevron: { marginTop: 4 },
   workshopTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: colors.ink,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   director: {
-    marginTop: 5,
+    marginTop: 6,
     fontSize: 14,
     color: colors.inkMuted,
-    lineHeight: 19,
+    lineHeight: 20,
   },
-  footnote: {
-    marginTop: 16,
-    fontSize: 12,
+  workshopVenueBlock: {
+    marginTop: 8,
+    gap: 2,
+  },
+  workshopVenue: {
+    fontSize: 13,
+    color: colors.brand,
+    fontWeight: '600',
     lineHeight: 18,
+  },
+  workshopVenueNote: {
+    fontSize: 13,
     color: colors.inkMuted,
-    paddingHorizontal: 4,
+    fontWeight: '500',
+    lineHeight: 18,
   },
   blockLabel: {
     marginTop: 24,
@@ -300,15 +362,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 14,
-    paddingVertical: 14,
+    paddingVertical: 12,
     gap: 12,
   },
   venueRowPressed: {
     backgroundColor: colors.surface,
   },
   venueIcon: {
-    width: 36,
-    height: 36,
+    width: 34,
+    height: 34,
     borderRadius: 10,
     backgroundColor: 'rgba(134, 52, 25, 0.08)',
     alignItems: 'center',
@@ -317,17 +379,25 @@ const styles = StyleSheet.create({
   venueCopy: {
     flex: 1,
     minWidth: 0,
+    justifyContent: 'center',
+  },
+  venueDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.border,
+    marginLeft: 60,
   },
   venueName: {
     fontSize: 15,
     fontWeight: '600',
     color: colors.ink,
+    lineHeight: 20,
   },
   venueAction: {
     marginTop: 2,
-    fontSize: 13,
-    color: colors.brand,
+    fontSize: 12,
+    color: colors.inkMuted,
     fontWeight: '500',
+    lineHeight: 16,
   },
   resources: {
     marginTop: 28,

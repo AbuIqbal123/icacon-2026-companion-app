@@ -6,8 +6,10 @@ import * as Sharing from 'expo-sharing'
 import type { PdfId } from '../data/types'
 import { PDF_ASSETS } from '../data/events'
 
-/** Intent.FLAG_GRANT_READ_URI_PERMISSION — required so external viewers can read the content URI. */
+/** Intent.FLAG_GRANT_READ_URI_PERMISSION */
 const FLAG_GRANT_READ_URI_PERMISSION = 1
+/** Intent.FLAG_ACTIVITY_NEW_TASK */
+const FLAG_ACTIVITY_NEW_TASK = 0x10000000
 
 export async function resolvePdfUri(id: PdfId): Promise<string | null> {
   try {
@@ -16,15 +18,21 @@ export async function resolvePdfUri(id: PdfId): Promise<string | null> {
     const uri = asset.localUri ?? asset.uri
     if (!uri) return null
 
-    // Stable file:// path with .pdf extension (Android viewers + WebView)
-    if (uri.startsWith('file://') && uri.toLowerCase().endsWith('.pdf')) {
+    // Always land on a stable cache file://…/*.pdf for Android viewers
+    const base = FileSystem.cacheDirectory
+    if (!base) {
+      if (uri.startsWith('file://') && uri.toLowerCase().endsWith('.pdf')) {
+        return uri
+      }
       return uri
     }
 
-    const base = FileSystem.cacheDirectory
-    if (!base) return uri
-
     const dest = `${base}icacon-${id}.pdf`
+    if (uri.startsWith('file://') && uri.toLowerCase().endsWith('.pdf')) {
+      // Still copy if source is ephemeral asset path without our name
+      if (uri === dest) return dest
+    }
+
     const info = await FileSystem.getInfoAsync(dest)
     if (!info.exists) {
       await FileSystem.copyAsync({ from: uri, to: dest })
@@ -35,32 +43,33 @@ export async function resolvePdfUri(id: PdfId): Promise<string | null> {
   }
 }
 
-/** Share sheet (iOS open/share, Android fallback when no viewer handles VIEW). */
-async function sharePdf(uri: string, title: string): Promise<boolean> {
+async function sharePdf(uri: string, title: string): Promise<void> {
   const canShare = await Sharing.isAvailableAsync()
-  if (!canShare) return false
+  if (!canShare) {
+    Alert.alert(title, 'Sharing is not available on this device.')
+    return
+  }
   await Sharing.shareAsync(uri, {
     mimeType: 'application/pdf',
     dialogTitle: title,
     UTI: 'com.adobe.pdf',
   })
-  return true
 }
 
 /**
- * Android: open with the system PDF viewer via ACTION_VIEW + content:// URI.
- * Falls back to the share sheet if no app can handle the intent.
+ * Android: ACTION_VIEW with content:// URI (not the share sheet).
+ * Share is only offered if the user confirms after VIEW fails.
  */
 async function openWithAndroidViewer(uri: string): Promise<void> {
   const contentUri = await FileSystem.getContentUriAsync(uri)
   await IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
     data: contentUri,
     type: 'application/pdf',
-    flags: FLAG_GRANT_READ_URI_PERMISSION,
+    flags: FLAG_GRANT_READ_URI_PERMISSION | FLAG_ACTIVITY_NEW_TASK,
   })
 }
 
-/** Open bundled PDF offline: Android VIEW intent; iOS / fallback share sheet. */
+/** Open bundled PDF offline. */
 export async function openBundledPdf(id: PdfId): Promise<void> {
   const meta = PDF_ASSETS[id]
   const uri = await resolvePdfUri(id)
@@ -78,22 +87,25 @@ export async function openBundledPdf(id: PdfId): Promise<void> {
         await openWithAndroidViewer(uri)
         return
       } catch {
-        // No PDF handler or intent failed — try share sheet as last resort
-        const shared = await sharePdf(uri, meta.title)
-        if (shared) return
         Alert.alert(
           meta.title,
-          'Install a PDF viewer app, then try again.',
+          'Could not open a PDF viewer. Install a PDF app, or share the file instead.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Share file',
+              onPress: () => {
+                void sharePdf(uri, meta.title)
+              },
+            },
+          ],
         )
         return
       }
     }
 
-    // iOS: share sheet lets the user open/save via system UI
-    const shared = await sharePdf(uri, meta.title)
-    if (!shared) {
-      Alert.alert(meta.title, 'Unable to open this PDF on this device.')
-    }
+    // iOS: system share / open sheet
+    await sharePdf(uri, meta.title)
   } catch {
     Alert.alert('Could not open PDF', 'Please try again.')
   }

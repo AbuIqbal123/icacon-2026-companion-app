@@ -4,7 +4,7 @@ Expo React Native app for **ICACON 2026** (Aligarh).
 
 - Offline-first: workshops, contacts, and bundled PDFs work without network  
 - No login · no analytics · minimal permissions  
-- Navigate: outdoor Maps for venues; indoor map when floor plans are ready  
+- Navigate: workshop & venue Google Maps links (needs network)  
 
 ## Run
 

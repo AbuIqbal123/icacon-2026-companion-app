@@ -19,6 +19,7 @@ export default function RootLayout() {
 
   return (
     <>
+      {/* Default light for brown PDF header; tab screens override per page */}
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -34,6 +35,7 @@ export default function RootLayout() {
             presentation: 'modal',
             title: 'PDF',
             headerShown: true,
+            statusBarStyle: 'light',
           }}
         />
       </Stack>

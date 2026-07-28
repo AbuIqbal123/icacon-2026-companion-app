@@ -1,4 +1,4 @@
-import { Alert, Linking, Platform } from 'react-native'
+import { Alert, AppState, Linking, Platform, type AppStateStatus } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 import NetInfo from '@react-native-community/netinfo'
 import { VENUE_MAPS } from '../data/events'
@@ -40,37 +40,75 @@ async function ensureOnline(): Promise<boolean> {
   return true
 }
 
-/** External https (and maps) — needs network. */
-export async function openExternal(url: string): Promise<void> {
-  if (url.startsWith('mailto:')) {
-    await openMail(url.replace(/^mailto:/i, ''))
-    return
+const browserOptions: WebBrowser.WebBrowserOpenOptions = {
+  presentationStyle:
+    Platform.OS === 'ios'
+      ? WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET
+      : WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+  // Keep Custom Tabs in the same task so returning from Maps/GMaps is reliable.
+  ...(Platform.OS === 'android' ? { createTask: false, showInRecents: false } : null),
+}
+
+/**
+ * Track the active openBrowserAsync promise.
+ * On iOS, a second open while SFSafariViewController is still up returns
+ * `{ type: 'locked' }` and nothing appears — common after Maps handoff.
+ */
+let activeBrowserOpen: Promise<WebBrowser.WebBrowserResult> | null = null
+
+async function dismissInAppBrowser(): Promise<void> {
+  try {
+    await WebBrowser.dismissBrowser()
+  } catch {
+    // nothing open, or platform has no dismiss
   }
-  if (url.startsWith('tel:')) {
-    await openTel(url.replace(/^tel:/i, ''))
-    return
+  if (activeBrowserOpen) {
+    try {
+      await activeBrowserOpen
+    } catch {
+      // ignore
+    }
+    activeBrowserOpen = null
+  }
+}
+
+/**
+ * Prefer in-app browser (Safari sheet / Chrome Custom Tab).
+ * OS can still hand off to Google Maps / external browser when the page asks.
+ * If the sheet is stuck (locked), dismiss + retry once; then fall back to Linking.
+ */
+async function openInAppBrowser(url: string): Promise<void> {
+  // Clear any leftover session so rapid venue taps always open a fresh sheet.
+  if (activeBrowserOpen) {
+    await dismissInAppBrowser()
   }
 
-  if (!(await ensureOnline())) return
-
-  const isMaps =
-    url.includes('google.com/maps') ||
-    url.includes('maps.apple.com') ||
-    url.startsWith('geo:') ||
-    url.startsWith('maps:')
+  const run = async (): Promise<WebBrowser.WebBrowserResult> => {
+    const promise = WebBrowser.openBrowserAsync(url, browserOptions)
+    activeBrowserOpen = promise
+    try {
+      return await promise
+    } finally {
+      if (activeBrowserOpen === promise) {
+        activeBrowserOpen = null
+      }
+    }
+  }
 
   try {
-    if (isMaps) {
-      await Linking.openURL(url)
-      return
+    let result = await run()
+
+    // iOS: previous SFSafariViewController still held the lock.
+    if (result.type === WebBrowser.WebBrowserResultType.LOCKED) {
+      await dismissInAppBrowser()
+      // Brief yield so the native presenter can clear.
+      await new Promise((r) => setTimeout(r, 50))
+      result = await run()
     }
 
-    await WebBrowser.openBrowserAsync(url, {
-      presentationStyle:
-        Platform.OS === 'ios'
-          ? WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET
-          : WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
-    })
+    if (result.type === WebBrowser.WebBrowserResultType.LOCKED) {
+      await Linking.openURL(url)
+    }
   } catch {
     try {
       await Linking.openURL(url)
@@ -83,7 +121,52 @@ export async function openExternal(url: string): Promise<void> {
   }
 }
 
-/** Pick JNMC or Lemon Tree → Google Maps. */
+// When the user leaves for Maps and comes back, release a stuck sheet so the
+// next venue tap is not locked. Do not dismiss while still backgrounded mid-open.
+let appState: AppStateStatus = AppState.currentState
+AppState.addEventListener('change', (next) => {
+  const wasBackground =
+    appState === 'background' || appState === 'inactive'
+  appState = next
+  if (wasBackground && next === 'active' && activeBrowserOpen) {
+    // Maps / external app often leaves the in-app browser half-open.
+    // Dismiss so the next open is not permanently locked.
+    void dismissInAppBrowser()
+  }
+})
+
+/** External https (and maps) — needs network. Prefer in-app browser. */
+export async function openExternal(url: string): Promise<void> {
+  if (url.startsWith('mailto:')) {
+    await openMail(url.replace(/^mailto:/i, ''))
+    return
+  }
+  if (url.startsWith('tel:')) {
+    await openTel(url.replace(/^tel:/i, ''))
+    return
+  }
+
+  // Native map schemes always leave the app.
+  if (
+    url.startsWith('geo:') ||
+    url.startsWith('maps:') ||
+    url.startsWith('comgooglemaps:')
+  ) {
+    if (!(await ensureOnline())) return
+    try {
+      await Linking.openURL(url)
+    } catch {
+      Alert.alert('Unable to open Maps', 'Please try again.')
+    }
+    return
+  }
+
+  if (!(await ensureOnline())) return
+
+  await openInAppBrowser(url)
+}
+
+/** Pick JNMC or Lemon Tree → Google Maps (in-app sheet; Maps app if handed off). */
 export function openVenuePicker(): void {
   Alert.alert('Open venue in Maps', undefined, [
     {

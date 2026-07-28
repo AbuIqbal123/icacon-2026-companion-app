@@ -1,58 +1,87 @@
+import { StatusBar } from 'expo-status-bar'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ChevronRight, Compass, MapPin } from 'lucide-react-native'
-import { EVENT_META, VENUE_MAPS } from '@/src/data/events'
+import { ChevronRight, MapPin } from 'lucide-react-native'
+import {
+  EVENT_META,
+  USG_REGIONAL_MAPS,
+  VENUE_MAPS,
+  WORKSHOP_VENUE_MAPS,
+} from '@/src/data/events'
 import { colors } from '@/src/theme/colors'
 import { openExternal } from '@/src/lib/linking'
+
+type Place = { id: string; title: string; meta: string; mapsUrl: string }
+
+const MAIN: Place[] = [
+  {
+    id: 'jnmc',
+    title: 'JNMC, AMU Aligarh',
+    meta: '11 Sept · Workshops',
+    mapsUrl: VENUE_MAPS.jnmc,
+  },
+  {
+    id: 'lemon',
+    title: EVENT_META.conferenceVenue,
+    meta: '12–13 Sept · Conference',
+    mapsUrl: VENUE_MAPS.lemonTree,
+  },
+]
+
+const WORKSHOP_SITES: Place[] = [
+  {
+    id: 'paramedical',
+    title: 'Paramedical College',
+    meta: 'Airway · POCUS · Ventilation · Obstetrics',
+    mapsUrl: WORKSHOP_VENUE_MAPS,
+  },
+  {
+    id: 'ot',
+    title: 'Surgery OT Complex',
+    meta: 'Near Dept of Anaesthesia · USG Regional',
+    mapsUrl: USG_REGIONAL_MAPS,
+  },
+]
+
+function PlaceList({ places }: { places: Place[] }) {
+  return (
+    <View style={styles.card}>
+      {places.map((place, i) => (
+        <View key={place.id}>
+          <Pressable
+            onPress={() => openExternal(place.mapsUrl)}
+            style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+          >
+            <View style={styles.rowIcon}>
+              <MapPin size={18} color={colors.brand} />
+            </View>
+            <View style={styles.rowCopy}>
+              <Text style={styles.rowTitle}>{place.title}</Text>
+              <Text style={styles.rowMeta}>{place.meta}</Text>
+            </View>
+            <ChevronRight size={18} color={colors.inkMuted} />
+          </Pressable>
+          {i < places.length - 1 ? <View style={styles.divider} /> : null}
+        </View>
+      ))}
+    </View>
+  )
+}
 
 export default function NavigateScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
+      {/* Dark icons so time/battery read on light background */}
+      <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.header}>Navigate</Text>
-        <Text style={styles.sub}>Venues & indoor map</Text>
+        <Text style={styles.sub}>Directions to event places</Text>
 
-        <View style={styles.heroCard}>
-          <View style={styles.iconWrap}>
-            <Compass size={28} color={colors.brand} />
-          </View>
-          <Text style={styles.title}>Indoor map</Text>
-          <Text style={styles.heroBody}>
-            Floor-by-floor guidance for JNMC workshop rooms will unlock when
-            floor plans are finalised.
-          </Text>
-        </View>
+        <Text style={styles.section}>Main</Text>
+        <PlaceList places={MAIN} />
 
-        <Text style={styles.sectionLabel}>Open in Maps</Text>
-        <View style={styles.card}>
-          <Pressable
-            onPress={() => openExternal(VENUE_MAPS.jnmc)}
-            style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-          >
-            <View style={styles.rowIcon}>
-              <MapPin size={18} color={colors.brand} />
-            </View>
-            <View style={styles.rowCopy}>
-              <Text style={styles.rowTitle}>JNMC, AMU Aligarh</Text>
-              <Text style={styles.rowSub}>Workshops · {EVENT_META.workshopDateShort}</Text>
-            </View>
-            <ChevronRight size={18} color={colors.inkMuted} />
-          </Pressable>
-          <View style={styles.divider} />
-          <Pressable
-            onPress={() => openExternal(VENUE_MAPS.lemonTree)}
-            style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-          >
-            <View style={styles.rowIcon}>
-              <MapPin size={18} color={colors.brand} />
-            </View>
-            <View style={styles.rowCopy}>
-              <Text style={styles.rowTitle}>{EVENT_META.conferenceVenue}</Text>
-              <Text style={styles.rowSub}>Conference · {EVENT_META.conferenceDates}</Text>
-            </View>
-            <ChevronRight size={18} color={colors.inkMuted} />
-          </Pressable>
-        </View>
+        <Text style={styles.section}>Workshop sites</Text>
+        <PlaceList places={WORKSHOP_SITES} />
       </ScrollView>
     </SafeAreaView>
   )
@@ -67,35 +96,13 @@ const styles = StyleSheet.create({
     color: colors.ink,
     letterSpacing: -0.3,
   },
-  sub: { fontSize: 14, color: colors.inkMuted, marginTop: 4, marginBottom: 18 },
-  heroCard: {
-    alignItems: 'center',
-    paddingVertical: 22,
-    paddingHorizontal: 16,
-    borderRadius: 16,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
-    backgroundColor: colors.surfaceElevated,
-  },
-  iconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: 'rgba(134, 52, 25, 0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-  },
-  title: { fontSize: 17, fontWeight: '700', color: colors.ink },
-  heroBody: {
-    marginTop: 8,
+  sub: {
     fontSize: 14,
-    lineHeight: 20,
     color: colors.inkMuted,
-    textAlign: 'center',
+    marginTop: 4,
+    marginBottom: 20,
   },
-  sectionLabel: {
-    marginTop: 22,
+  section: {
     marginBottom: 8,
     marginLeft: 4,
     fontSize: 13,
@@ -108,29 +115,31 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.border,
     overflow: 'hidden',
+    marginBottom: 20,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 16,
     paddingHorizontal: 14,
     gap: 12,
+    minHeight: 72,
   },
   rowPressed: { backgroundColor: colors.surface },
   rowIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     backgroundColor: 'rgba(134, 52, 25, 0.08)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   rowCopy: { flex: 1, minWidth: 0 },
-  rowTitle: { fontSize: 15, fontWeight: '600', color: colors.ink },
-  rowSub: { marginTop: 2, fontSize: 13, color: colors.inkMuted },
+  rowTitle: { fontSize: 16, fontWeight: '600', color: colors.ink },
+  rowMeta: { marginTop: 3, fontSize: 13, color: colors.inkMuted },
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.border,
-    marginLeft: 62,
+    marginLeft: 66,
   },
 })

@@ -33,6 +33,11 @@ yarn-error.*
 # local env files
 .env*.local
 
+# Google Play / EAS submit (never commit)
+google-service-account.json
+*-service-account*.json
+.env.eas-simulator
+
 # typescript
 *.tsbuildinfo
 
@@ -43,3 +48,7 @@ yarn-error.*
 # Local EAS APK artifacts
 *.apk
 build-*.apk
+
+# Android upload keystore (private)
+credentials/
+credentials.json

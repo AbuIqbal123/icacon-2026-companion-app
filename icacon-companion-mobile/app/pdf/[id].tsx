@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import { useLocalSearchParams, Stack } from 'expo-router'
 import { WebView } from 'react-native-webview'
+import { SymbolView } from 'expo-symbols'
 import type { PdfId } from '@/src/data/types'
 import { PDF_ASSETS } from '@/src/data/events'
 import { openBundledPdf, resolvePdfUri } from '@/src/lib/pdfs'
@@ -21,6 +29,7 @@ export default function PdfScreen() {
   const [uri, setUri] = useState<string | null>(null)
   const [error, setError] = useState(false)
   const preferSystemViewer = Platform.OS === 'android'
+  const showShareInHeader = Platform.OS === 'ios' && !!uri && !error && !preferSystemViewer
 
   useEffect(() => {
     let alive = true
@@ -44,7 +53,34 @@ export default function PdfScreen() {
 
   return (
     <View style={styles.root}>
-      <Stack.Screen options={{ title: meta.title }} />
+      <Stack.Screen
+        options={{
+          title: meta.title,
+          headerRight: showShareInHeader
+            ? () => (
+                <Pressable
+                  onPress={() => openBundledPdf(pdfId)}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Share PDF"
+                  style={({ pressed }) => [
+                    styles.headerShare,
+                    pressed && styles.headerSharePressed,
+                  ]}
+                >
+                  <SymbolView
+                    name="square.and.arrow.up"
+                    tintColor={colors.white}
+                    size={18}
+                    weight="medium"
+                    resizeMode="scaleAspectFit"
+                    style={styles.headerShareSymbol}
+                  />
+                </Pressable>
+              )
+            : undefined,
+        }}
+      />
       {error ? (
         <View style={styles.center}>
           <Text style={styles.msg}>Could not load this PDF.</Text>
@@ -61,24 +97,14 @@ export default function PdfScreen() {
           <PrimaryButton label="Open PDF" onPress={() => openBundledPdf(pdfId)} />
         </View>
       ) : (
-        <>
-          <WebView
-            source={{ uri }}
-            style={styles.web}
-            originWhitelist={['*']}
-            allowFileAccess
-            onError={() => setError(true)}
-            // Avoid overly broad file access when not required
-            mixedContentMode="never"
-          />
-          <View style={styles.footer}>
-            <PrimaryButton
-              label="Share"
-              variant="outline"
-              onPress={() => openBundledPdf(pdfId)}
-            />
-          </View>
-        </>
+        <WebView
+          source={{ uri }}
+          style={styles.web}
+          originWhitelist={['*']}
+          allowFileAccess
+          onError={() => setError(true)}
+          mixedContentMode="never"
+        />
       )}
     </View>
   )
@@ -87,6 +113,20 @@ export default function PdfScreen() {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.surface },
   web: { flex: 1 },
+  // Square hit target so the glyph sits dead-center in iOS liquid-glass circle
+  headerShare: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerShareSymbol: {
+    width: 22,
+    height: 22,
+  },
+  headerSharePressed: {
+    opacity: 0.7,
+  },
   center: {
     flex: 1,
     alignItems: 'center',
@@ -105,11 +145,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginBottom: 8,
-  },
-  footer: {
-    padding: 12,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.surfaceElevated,
   },
 })

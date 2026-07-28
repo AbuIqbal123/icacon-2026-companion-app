@@ -21,8 +21,8 @@ ICACON 2026 Companion is the official-style mobile companion for the 7th Interna
 **Also available when online**
 • Official website, registration, and venue pages
 
-**Indoor navigation**  
-JNMC indoor map is marked Coming soon and will ship once confirmed floor plans are available.
+**Navigation**  
+Workshop and venue locations open in Google Maps (needs internet). No indoor GPS routing.
 
 No account required. No ads. Built for on-site use with limited connectivity.
 
@@ -50,8 +50,9 @@ https://www.icaconaligarh.com
 
 ## Privacy policy URL
 
-Host `docs/privacy.md` on the official site (or a GitHub Pages URL) before submission, e.g.  
-https://www.icaconaligarh.com/privacy-app.html  
+https://abuiqbal123.github.io/icacon-privacy/  
+
+(Source: public repo https://github.com/AbuIqbal123/icacon-privacy)
 
 ## Screenshots checklist
 
@@ -59,6 +60,6 @@ https://www.icaconaligarh.com/privacy-app.html
 2. Programme — workshop day  
 3. Programme — Day 1 PDF open / share  
 4. Info — contacts  
-5. Navigate — coming soon  
+5. Navigate — main + workshop sites
 
 Capture on a recent iPhone and a common Android phone size.

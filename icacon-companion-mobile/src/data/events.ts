@@ -14,6 +14,8 @@ export const LINKS = {
   register: 'https://in.eregnow.com/ticketing/register/icacon2026',
   organiser: 'https://www.meetingsnmore.com/mnm/',
   email: 'mailto:icacon2026@gmail.com',
+  /** Public privacy policy (App Store / Play requirement + in-app link) */
+  privacy: 'https://abuiqbal123.github.io/icacon-privacy/',
 } as const
 
 export const EVENT_META = {
@@ -74,7 +76,6 @@ export const EVENT_DAYS: EventDay[] = [
 /**
  * Pre-conference workshops (11 Sept).
  * All run in parallel 09:00–16:00 (user-confirmed).
- * `placeId` reserved for Phase 2 indoor navigation.
  */
 export const WORKSHOP_DAY = {
   timeLabel: '09:00 – 16:00',
@@ -82,13 +83,30 @@ export const WORKSHOP_DAY = {
   fee: '₹4,000',
 } as const
 
+/** Four workshops (Airway, POCUS, Ventilation, Obstetrics) — Paramedical College. */
+export const WORKSHOP_VENUE_MAPS =
+  'https://maps.app.goo.gl/BWgH6jRMjLnwkysM6' as const
+
+/** USG Regional — Surgery OT Complex (near Dept of Anaesthesia). */
+export const USG_REGIONAL_MAPS =
+  'https://maps.app.goo.gl/2kF68afduK8JVnHq7?g_st=ic' as const
+
+export const USG_REGIONAL_VENUE = 'Surgery OT Complex' as const
+export const USG_REGIONAL_VENUE_NOTE = 'Near Dept of Anaesthesia' as const
+
 export interface Workshop {
   id: string
   title: string
   director?: string
   fee: string
-  /** Future: map place id when floor plans ship */
-  placeId?: string
+  /** Venue name (shown only when not the default shared site) */
+  venueLabel: string
+  /** Optional second venue line (keeps rows readable) */
+  venueNote?: string
+  /** Google Maps link */
+  mapsUrl: string
+  /** true = Paramedical College with the other main workshops */
+  sharedSite?: boolean
 }
 
 export const WORKSHOPS: Workshop[] = [
@@ -97,35 +115,46 @@ export const WORKSHOPS: Workshop[] = [
     title: 'Advanced Airway Workshop',
     director: 'Prof. Rashid M Khan',
     fee: '₹4,000',
-    placeId: 'workshop-hall-a',
+    venueLabel: 'Paramedical College',
+    mapsUrl: WORKSHOP_VENUE_MAPS,
+    sharedSite: true,
   },
   {
     id: 'pocus',
     title: 'Point of Care Ultrasound (POCUS)',
     director: 'Prof. Poonam Malhotra',
     fee: '₹4,000',
-    placeId: 'workshop-101',
+    venueLabel: 'Paramedical College',
+    mapsUrl: WORKSHOP_VENUE_MAPS,
+    sharedSite: true,
   },
   {
     id: 'vent',
     title: 'Mechanical Ventilation',
     director: 'Dr. Yash Javeri',
     fee: '₹4,000',
-    placeId: 'anaesth-theatre',
+    venueLabel: 'Paramedical College',
+    mapsUrl: WORKSHOP_VENUE_MAPS,
+    sharedSite: true,
   },
   {
     id: 'ob',
     title: 'Obstetrics Crisis Simulation and Skill',
     director: 'Dr. Faiza Khan',
     fee: '₹4,000',
-    placeId: 'skills-lab',
+    venueLabel: 'Paramedical College',
+    mapsUrl: WORKSHOP_VENUE_MAPS,
+    sharedSite: true,
   },
   {
     id: 'blocks',
     title: 'Ultrasound Guided Regional Nerve Blocks',
     director: 'Dr. Md Ishtiyaque Hussain',
     fee: '₹4,000',
-    placeId: 'room-205',
+    venueLabel: USG_REGIONAL_VENUE,
+    venueNote: USG_REGIONAL_VENUE_NOTE,
+    mapsUrl: USG_REGIONAL_MAPS,
+    sharedSite: false,
   },
 ]
 
@@ -152,7 +181,6 @@ export const OFFLINE_INFO = {
   tips: [
     '11 Sept workshops · JNMC · 09:00–16:00 (all parallel)',
     '12–13 Sept conference · Lemon Tree Hotel',
-    'Workshop seats: first come, first served',
     'Workshop fee: ₹4,000 (incl. GST)',
   ],
 }

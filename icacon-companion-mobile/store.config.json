@@ -1,0 +1,50 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "copyright": "2026 ICACON Aligarh",
+    "categories": ["MEDICAL", "LIFESTYLE"],
+    "info": {
+      "en-US": {
+        "title": "ICACON 2026 Companion",
+        "subtitle": "Offline programme & contacts",
+        "description": "ICACON 2026 Companion is a free mobile companion for the 7th International & 17th National Conference of the Indian College of Anaesthesiologists in Aligarh (11–13 September 2026).\n\nBuilt for on-site use with limited connectivity. Core content works offline. No account required. No ads.\n\nWHAT YOU GET OFFLINE\n• Workshop list and workshop-day schedule\n• Conference brochure PDF\n• Day 1 and Day 2 programme PDFs\n• Secretariat and registration contacts (tap to call or email)\n\nWHEN ONLINE\n• Official website, registration, and venue pages\n• Workshop and venue locations open in Maps (internet required)\n\nNAVIGATION\nThis app opens Maps for venues. It does not provide indoor GPS routing or live turn-by-turn navigation inside buildings.\n\nABOUT THE EVENT\nICACON 2026 — Towards Smarter Anaesthesia: Integrating Technology, Intelligence & Precision\nOrganised by the Department of Anaesthesiology & Critical Care, JNMC, Aligarh Muslim University\nWorkshop day: 11 September 2026 (JNMC, AMU Aligarh)\nConference: 12–13 September 2026 (Lemon Tree Hotel, Aligarh)\n\nPRIVACY\nWe do not collect personal data. No analytics or tracking SDKs.\nPrivacy policy: https://abuiqbal123.github.io/icacon-privacy/\n\nSUPPORT\nWebsite: https://www.icaconaligarh.com\nEmail: icacon2026@gmail.com",
+        "keywords": [
+          "anaesthesia,anesthesia,Aligarh,conference,JNMC,AMU,workshops,medical,schedule,brochure"
+        ],
+        "releaseNotes": "Initial release of ICACON 2026 Companion.\n\n• Offline workshop list and programme\n• Brochure and Day 1 / Day 2 PDFs\n• Secretariat and registration contacts\n• Maps links for venues (when online)",
+        "promoText": "Official-style companion for ICACON 2026 in Aligarh (11–13 Sept). Workshops, programme PDFs, and contacts work offline. Free. No account.",
+        "privacyPolicyUrl": "https://abuiqbal123.github.io/icacon-privacy/",
+        "supportUrl": "https://www.icaconaligarh.com",
+        "marketingUrl": "https://www.icaconaligarh.com"
+      }
+    },
+    "advisory": {
+      "alcoholTobaccoOrDrugUseOrReferences": "NONE",
+      "gamblingSimulated": "NONE",
+      "medicalOrTreatmentInformation": "NONE",
+      "profanityOrCrudeHumor": "NONE",
+      "sexualContentGraphicAndNudity": "NONE",
+      "sexualContentOrNudity": "NONE",
+      "horrorOrFearThemes": "NONE",
+      "matureOrSuggestiveThemes": "NONE",
+      "violenceCartoonOrFantasy": "NONE",
+      "violenceRealistic": "NONE",
+      "violenceRealisticProlongedGraphicOrSadistic": "NONE",
+      "contests": "NONE",
+      "gambling": false,
+      "unrestrictedWebAccess": false,
+      "seventeenPlus": false
+    },
+    "release": {
+      "automaticRelease": false,
+      "phasedRelease": false
+    },
+    "review": {
+      "firstName": "ICACON",
+      "lastName": "Organising Committee",
+      "email": "icacon2026@gmail.com",
+      "phone": "+91 0000000000",
+      "notes": "ICACON 2026 Companion is an offline-first conference information app for a medical conference in Aligarh (11–13 September 2026).\n\nNo login or account is required. All core features work offline:\n- Home: workshop list\n- Programme: workshop day schedule + brochure / Day 1 / Day 2 PDFs\n- Info: secretariat and registration contacts (tel: / mailto:)\n- Navigate: list of venues; Maps opens only when online\n\nMaps and website links need network access; offline use shows a clear no-internet style alert.\nExport compliance: HTTPS only; ITSAppUsesNonExemptEncryption = false.\nSupport: icacon2026@gmail.com\n\nReplace the review phone number in App Store Connect with a real contact number before submit."
+    }
+  }
+}
