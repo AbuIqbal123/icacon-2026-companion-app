@@ -75,10 +75,10 @@ export const EVENT_DAYS: EventDay[] = [
 
 /**
  * Pre-conference workshops (11 Sept).
- * All run in parallel 09:00–16:00 (user-confirmed).
+ * All run in parallel 9am–4pm (user-confirmed).
  */
 export const WORKSHOP_DAY = {
-  timeLabel: '09:00 – 16:00',
+  timeLabel: '9am – 4pm',
   timeNote: 'All workshops run simultaneously',
   fee: '₹4,000',
 } as const
@@ -167,6 +167,11 @@ export const OFFLINE_INFO = {
     secretary: 'Prof. Obaid A Siddiqui, Organising Secretary',
     phones: ['+91 98976 95761', '+91 97168 02158'],
     email: 'icacon2026@gmail.com',
+    coSecretary: {
+      name: 'Dr Shahna Ali',
+      role: 'Co-Organising Secretary',
+      phone: '+91 94119 79684',
+    },
   },
   registrationContact: {
     name: 'Mr. Rachit Bisht',
@@ -179,7 +184,7 @@ export const OFFLINE_INFO = {
     web: 'www.meetingsnmore.com',
   },
   tips: [
-    '11 Sept workshops · JNMC · 09:00–16:00 (all parallel)',
+    '11 Sept workshops · JNMC · 9am–4pm (all parallel)',
     '12–13 Sept conference · Lemon Tree Hotel',
     'Workshop fee: ₹4,000 (incl. GST)',
   ],

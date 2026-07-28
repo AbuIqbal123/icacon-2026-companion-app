@@ -85,7 +85,7 @@ function ContactCard({
   name: string
   role: string
   phones: string[]
-  email: string
+  email?: string
 }) {
   return (
     <View style={styles.contactCard}>
@@ -104,15 +104,17 @@ function ContactCard({
             <Text style={styles.contactPhone}>{p}</Text>
           </Pressable>
         ))}
-        <Pressable
-          onPress={() => {
-            void openMail(email)
-          }}
-          hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
-          style={({ pressed }) => pressed && styles.contactLinkPressed}
-        >
-          <Text style={styles.contactEmail}>{email}</Text>
-        </Pressable>
+        {email ? (
+          <Pressable
+            onPress={() => {
+              void openMail(email)
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
+            style={({ pressed }) => pressed && styles.contactLinkPressed}
+          >
+            <Text style={styles.contactEmail}>{email}</Text>
+          </Pressable>
+        ) : null}
       </View>
     </View>
   )
@@ -194,6 +196,12 @@ export default function InfoScreen() {
             role="Organising Secretary"
             phones={s.phones}
             email={s.email}
+          />
+          <View style={styles.contactDivider} />
+          <ContactCard
+            name={s.coSecretary.name}
+            role={s.coSecretary.role}
+            phones={[s.coSecretary.phone]}
           />
         </Group>
 
@@ -341,6 +349,11 @@ const styles = StyleSheet.create({
   contactCard: {
     paddingHorizontal: 16,
     paddingVertical: 16,
+  },
+  contactDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.border,
+    marginLeft: 16,
   },
   contactName: {
     fontSize: 17,

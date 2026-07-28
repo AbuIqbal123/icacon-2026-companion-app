@@ -1,6 +1,6 @@
 # Privacy Policy — ICACON 2026 Companion
 
-**Last updated:** 2026-07-23  
+**Last updated:** 2026-07-28  
 **App:** ICACON 2026 Companion (Android: `com.icacon2026.companion`)  
 **Contact:** icacon2026@gmail.com  
 **Public URL (App Store / Play):** https://abuiqbal123.github.io/icacon-privacy/

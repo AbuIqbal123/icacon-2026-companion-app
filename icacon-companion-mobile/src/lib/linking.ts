@@ -18,11 +18,23 @@ export async function openTel(phone: string): Promise<void> {
   }
 }
 
-export async function openMail(email: string): Promise<void> {
+export async function openMail(
+  email: string,
+  options?: { subject?: string; body?: string },
+): Promise<void> {
   const trimmed = email.trim()
   if (!trimmed.includes('@')) return
+  const parts: string[] = []
+  if (options?.subject) {
+    parts.push(`subject=${encodeURIComponent(options.subject)}`)
+  }
+  if (options?.body) {
+    parts.push(`body=${encodeURIComponent(options.body)}`)
+  }
+  const url =
+    parts.length > 0 ? `mailto:${trimmed}?${parts.join('&')}` : `mailto:${trimmed}`
   try {
-    await Linking.openURL(`mailto:${trimmed}`)
+    await Linking.openURL(url)
   } catch {
     // cancelled or unavailable
   }

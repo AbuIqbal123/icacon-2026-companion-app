@@ -1,6 +1,4 @@
 import { Stack } from 'expo-router'
-import * as SplashScreen from 'expo-splash-screen'
-import { useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { colors } from '@/src/theme/colors'
 
@@ -10,13 +8,12 @@ export const unstable_settings = {
   initialRouteName: '(tabs)',
 }
 
-SplashScreen.preventAutoHideAsync()
-
+/**
+ * Splash: no preventAutoHideAsync — nothing async to wait for (no custom fonts,
+ * no remote config). Native splash auto-hides on first paint = fastest path.
+ * See expo-splash-screen: hide as soon as possible.
+ */
 export default function RootLayout() {
-  useEffect(() => {
-    SplashScreen.hideAsync()
-  }, [])
-
   return (
     <>
       {/* Default light for brown PDF header; tab screens override per page */}
