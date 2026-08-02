@@ -17,6 +17,7 @@
     "expo-sharing": "~57.0.6",
     "expo-splash-screen": "~57.0.4",
     "expo-status-bar": "~57.0.1",
+    "expo-updates": "~57.0.11",
     "expo-web-browser": "~57.0.1",
     "lucide-react-native": "^1.25.0",
     "react": "19.2.3",
@@ -48,7 +49,10 @@
     "build:dev:ios": "eas build --profile development --platform ios",
     "build:dev:ios-sim": "eas build --profile development-simulator --platform ios",
     "build:preview": "eas build --profile preview --platform all",
-    "build:production": "eas build --profile production --platform all"
+    "build:production": "eas build --profile production --platform all",
+    "update:preview": "eas update --channel preview --environment preview",
+    "update:production": "eas update --channel production --environment production",
+    "update:list": "eas update:list --all"
   },
   "private": true
 }

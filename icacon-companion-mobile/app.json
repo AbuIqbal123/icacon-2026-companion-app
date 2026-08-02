@@ -9,6 +9,14 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "primaryColor": "#863419",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/5865f52b-c995-40df-bf32-532be0ae6588",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.icacon.companion",
