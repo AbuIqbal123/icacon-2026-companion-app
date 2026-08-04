@@ -8,23 +8,24 @@ import {
   VENUE_MAPS,
   WORKSHOP_VENUE_MAPS,
 } from '@/src/data/events'
+import type { MapLinks } from '@/src/data/types'
 import { colors } from '@/src/theme/colors'
-import { openExternal } from '@/src/lib/linking'
+import { openMaps } from '@/src/lib/linking'
 
-type Place = { id: string; title: string; meta: string; mapsUrl: string }
+type Place = { id: string; title: string; meta: string; maps: MapLinks }
 
 const MAIN: Place[] = [
   {
     id: 'jnmc',
     title: 'JNMC, AMU Aligarh',
     meta: '11 Sept · Workshops',
-    mapsUrl: VENUE_MAPS.jnmc,
+    maps: VENUE_MAPS.jnmc,
   },
   {
     id: 'lemon',
     title: EVENT_META.conferenceVenue,
     meta: '12–13 Sept · Conference',
-    mapsUrl: VENUE_MAPS.lemonTree,
+    maps: VENUE_MAPS.lemonTree,
   },
 ]
 
@@ -33,13 +34,13 @@ const WORKSHOP_SITES: Place[] = [
     id: 'paramedical',
     title: 'Paramedical College',
     meta: 'Airway · POCUS · Ventilation · Obstetrics',
-    mapsUrl: WORKSHOP_VENUE_MAPS,
+    maps: WORKSHOP_VENUE_MAPS,
   },
   {
     id: 'ot',
     title: 'Surgery OT Complex',
     meta: 'Near Dept of Anaesthesia · USG Regional',
-    mapsUrl: USG_REGIONAL_MAPS,
+    maps: USG_REGIONAL_MAPS,
   },
 ]
 
@@ -49,7 +50,7 @@ function PlaceList({ places }: { places: Place[] }) {
       {places.map((place, i) => (
         <View key={place.id}>
           <Pressable
-            onPress={() => openExternal(place.mapsUrl)}
+            onPress={() => openMaps(place.maps, place.title)}
             style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
           >
             <View style={styles.rowIcon}>

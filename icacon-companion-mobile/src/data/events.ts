@@ -1,4 +1,9 @@
-import type { EventDay, PdfId } from './types'
+import type { EventDay, MapLinks, PdfId } from './types'
+
+/** Apple Maps search URL (opens the native Maps app on iOS). */
+function appleMapsQuery(query: string): string {
+  return `https://maps.apple.com/?q=${encodeURIComponent(query)}`
+}
 
 /** Official links — icaconaligarh.com */
 export const LINKS = {
@@ -37,11 +42,22 @@ export const EVENT_META = {
   theme: 'Towards Smarter Anaesthesia: Integrating Technology, Intelligence & Precision',
 }
 
-/** Google Maps deep links (opens app or browser) */
+/**
+ * Venue map destinations — Google short links + Apple Maps queries.
+ * iOS shows a chooser so users can open native Apple Maps (App Store guideline 4).
+ */
 export const VENUE_MAPS = {
-  jnmc: 'https://maps.app.goo.gl/uXS29KWGHc5QdaB66',
-  lemonTree: 'https://maps.app.goo.gl/TzJznfYVW3rAj5Y6A',
-} as const
+  jnmc: {
+    googleMapsUrl: 'https://maps.app.goo.gl/uXS29KWGHc5QdaB66',
+    appleMapsUrl: appleMapsQuery(
+      'Jawaharlal Nehru Medical College, AMU Aligarh, Uttar Pradesh',
+    ),
+  },
+  lemonTree: {
+    googleMapsUrl: 'https://maps.app.goo.gl/TzJznfYVW3rAj5Y6A',
+    appleMapsUrl: appleMapsQuery('Lemon Tree Hotel, Aligarh, Uttar Pradesh'),
+  },
+} as const satisfies Record<string, MapLinks>
 
 export const EVENT_DAYS: EventDay[] = [
   {
@@ -50,7 +66,7 @@ export const EVENT_DAYS: EventDay[] = [
     shortLabel: '11 Sept',
     dateLabel: '11 September 2026',
     venue: 'JNMC, AMU Aligarh',
-    mapsUrl: VENUE_MAPS.jnmc,
+    maps: VENUE_MAPS.jnmc,
     note: 'Pre-conference workshops',
   },
   {
@@ -59,7 +75,7 @@ export const EVENT_DAYS: EventDay[] = [
     shortLabel: '12 Sept',
     dateLabel: '12 September 2026',
     venue: 'Lemon Tree Hotel, Aligarh',
-    mapsUrl: VENUE_MAPS.lemonTree,
+    maps: VENUE_MAPS.lemonTree,
     note: 'Official programme: Day 1 PDF',
   },
   {
@@ -68,7 +84,7 @@ export const EVENT_DAYS: EventDay[] = [
     shortLabel: '13 Sept',
     dateLabel: '13 September 2026',
     venue: 'Lemon Tree Hotel, Aligarh',
-    mapsUrl: VENUE_MAPS.lemonTree,
+    maps: VENUE_MAPS.lemonTree,
     note: 'Official programme: Day 2 PDF',
   },
 ]
@@ -84,12 +100,20 @@ export const WORKSHOP_DAY = {
 } as const
 
 /** Four workshops (Airway, POCUS, Ventilation, Obstetrics) — Paramedical College. */
-export const WORKSHOP_VENUE_MAPS =
-  'https://maps.app.goo.gl/BWgH6jRMjLnwkysM6' as const
+export const WORKSHOP_VENUE_MAPS = {
+  googleMapsUrl: 'https://maps.app.goo.gl/BWgH6jRMjLnwkysM6',
+  appleMapsUrl: appleMapsQuery(
+    'Paramedical College, Jawaharlal Nehru Medical College, AMU Aligarh',
+  ),
+} as const satisfies MapLinks
 
 /** USG Regional — Surgery OT Complex (near Dept of Anaesthesia). */
-export const USG_REGIONAL_MAPS =
-  'https://maps.app.goo.gl/2kF68afduK8JVnHq7?g_st=ic' as const
+export const USG_REGIONAL_MAPS = {
+  googleMapsUrl: 'https://maps.app.goo.gl/2kF68afduK8JVnHq7?g_st=ic',
+  appleMapsUrl: appleMapsQuery(
+    'Department of Anaesthesiology, Jawaharlal Nehru Medical College, AMU Aligarh',
+  ),
+} as const satisfies MapLinks
 
 export const USG_REGIONAL_VENUE = 'Surgery OT Complex' as const
 export const USG_REGIONAL_VENUE_NOTE = 'Near Dept of Anaesthesia' as const
@@ -103,8 +127,7 @@ export interface Workshop {
   venueLabel: string
   /** Optional second venue line (keeps rows readable) */
   venueNote?: string
-  /** Google Maps link */
-  mapsUrl: string
+  maps: MapLinks
   /** true = Paramedical College with the other main workshops */
   sharedSite?: boolean
 }
@@ -116,7 +139,7 @@ export const WORKSHOPS: Workshop[] = [
     director: 'Prof. Rashid M Khan',
     fee: '₹4,000',
     venueLabel: 'Paramedical College',
-    mapsUrl: WORKSHOP_VENUE_MAPS,
+    maps: WORKSHOP_VENUE_MAPS,
     sharedSite: true,
   },
   {
@@ -125,7 +148,7 @@ export const WORKSHOPS: Workshop[] = [
     director: 'Prof. Poonam Malhotra',
     fee: '₹4,000',
     venueLabel: 'Paramedical College',
-    mapsUrl: WORKSHOP_VENUE_MAPS,
+    maps: WORKSHOP_VENUE_MAPS,
     sharedSite: true,
   },
   {
@@ -134,7 +157,7 @@ export const WORKSHOPS: Workshop[] = [
     director: 'Dr. Yash Javeri',
     fee: '₹4,000',
     venueLabel: 'Paramedical College',
-    mapsUrl: WORKSHOP_VENUE_MAPS,
+    maps: WORKSHOP_VENUE_MAPS,
     sharedSite: true,
   },
   {
@@ -143,7 +166,7 @@ export const WORKSHOPS: Workshop[] = [
     director: 'Dr. Faiza Khan',
     fee: '₹4,000',
     venueLabel: 'Paramedical College',
-    mapsUrl: WORKSHOP_VENUE_MAPS,
+    maps: WORKSHOP_VENUE_MAPS,
     sharedSite: true,
   },
   {
@@ -153,7 +176,7 @@ export const WORKSHOPS: Workshop[] = [
     fee: '₹4,000',
     venueLabel: USG_REGIONAL_VENUE,
     venueNote: USG_REGIONAL_VENUE_NOTE,
-    mapsUrl: USG_REGIONAL_MAPS,
+    maps: USG_REGIONAL_MAPS,
     sharedSite: false,
   },
 ]

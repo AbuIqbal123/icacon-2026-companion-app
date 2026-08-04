@@ -5,9 +5,9 @@ import { StatusBar } from 'expo-status-bar'
 import { router } from 'expo-router'
 import { ChevronRight, FileText, Globe, MapPin } from 'lucide-react-native'
 import { EVENT_DAYS, LINKS, WORKSHOP_DAY, WORKSHOPS } from '@/src/data/events'
-import type { EventDayId } from '@/src/data/types'
+import type { EventDayId, MapLinks } from '@/src/data/types'
 import { colors } from '@/src/theme/colors'
-import { openExternal } from '@/src/lib/linking'
+import { openExternal, openMaps } from '@/src/lib/linking'
 
 const TAB_LABEL: Record<EventDayId, string> = {
   workshop: '11 Sept',
@@ -17,17 +17,17 @@ const TAB_LABEL: Record<EventDayId, string> = {
 
 function VenueRow({
   name,
-  mapsUrl,
+  maps,
   detail,
 }: {
   name: string
-  mapsUrl: string
+  maps: MapLinks
   /** Optional second line; omit for a single-line row */
   detail?: string
 }) {
   return (
     <Pressable
-      onPress={() => openExternal(mapsUrl)}
+      onPress={() => openMaps(maps, name)}
       style={({ pressed }) => [styles.venueRow, pressed && styles.venueRowPressed]}
     >
       <View style={styles.venueIcon}>
@@ -135,7 +135,7 @@ export default function ProgrammeScreen() {
 
             <Text style={styles.blockLabel}>Venue</Text>
             <View style={styles.venueCard}>
-              <VenueRow name={day.venue} mapsUrl={day.mapsUrl} />
+              <VenueRow name={day.venue} maps={day.maps} />
             </View>
           </>
         ) : (
@@ -153,7 +153,7 @@ export default function ProgrammeScreen() {
               {WORKSHOPS.map((w, index) => (
                 <Pressable
                   key={w.id}
-                  onPress={() => openExternal(w.mapsUrl)}
+                  onPress={() => openMaps(w.maps, w.venueLabel)}
                   style={({ pressed }) => [
                     styles.row,
                     index < WORKSHOPS.length - 1 && styles.rowBorder,
@@ -198,13 +198,13 @@ export default function ProgrammeScreen() {
               <VenueRow
                 name="Paramedical College"
                 detail="Main workshops"
-                mapsUrl={WORKSHOPS.find((w) => w.sharedSite)!.mapsUrl}
+                maps={WORKSHOPS.find((w) => w.sharedSite)!.maps}
               />
               <View style={styles.venueDivider} />
               <VenueRow
                 name="Surgery OT Complex"
                 detail="Near Dept of Anaesthesia · USG Regional"
-                mapsUrl={WORKSHOPS.find((w) => w.id === 'blocks')!.mapsUrl}
+                maps={WORKSHOPS.find((w) => w.id === 'blocks')!.maps}
               />
             </View>
 

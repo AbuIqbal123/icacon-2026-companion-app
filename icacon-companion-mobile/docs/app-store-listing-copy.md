@@ -209,23 +209,87 @@ Also set in `store.config.json` as `apple.copyright` for `eas metadata:push`.
 | Contact last name | *(your name)* |
 | Contact phone | *(your phone with country code)* |
 | Contact email | icacon2026@gmail.com |
-| Demo account | **Not required** — no login |
+| Demo account username | *(leave blank — no login)* |
+| Demo account password | *(leave blank — no login)* |
 | Notes | See below |
 
 ### Review notes (paste into App Store Connect)
 
 ```
-ICACON 2026 Companion is an offline-first conference information app for a medical conference in Aligarh (11–13 September 2026).
+ICACON 2026 Companion is a free, offline-first conference information app for ICACON 2026 (medical conference, Aligarh, 11–13 September 2026).
 
-No login or account is required. All core features work offline:
-- Home: workshop list
-- Programme: workshop day schedule + brochure / Day 1 / Day 2 PDFs
-- Info: secretariat and registration contacts (tel: / mailto:)
-- Navigate: list of venues; Maps opens only when online
+NO LOGIN / NO ACCOUNTS
+There is no sign-in, registration, or user account of any kind inside the app. A demo username/password is not applicable. All features are available immediately after install with no credentials.
 
-Maps and website links need network access; offline use shows a clear “no internet” style alert.
+HOW TO VERIFY ALL FEATURES (no account needed)
+1. Home — workshop overview and quick links
+2. Programme — workshop list (11 Sept) and Day 1 / Day 2 programme PDFs (offline)
+3. Navigate — tap any venue → choose “Apple Maps” or “Google Maps” (requires network)
+4. Info — secretariat/registration contacts (tel/mailto), website, privacy policy, Register (opens external browser only)
+5. Brochure PDF — offline
+
+MAPS (Guideline 4)
+Venue taps show a system action sheet with Apple Maps and Google Maps. Apple Maps is listed first and opens the native Maps app via maps.apple.com.
+
+BUSINESS MODEL (Guideline 2.1(b))
+- This app is free and has no In-App Purchases, subscriptions, or paid unlocks.
+- Fees shown (e.g. workshop ₹4,000) are for the physical conference / workshops only. They are purchased only on the external website (icaconaligarh.com / eregnow ticketing), never inside the app.
+- “Register” opens Safari/external browser to the third-party ticketing site. No digital content, unlocks, or features are delivered via IAP or outside IAP inside the app.
+- Creating an account is not required for the app. External conference registration on the website is optional and separate from the app.
+
 Export compliance: HTTPS only; ITSAppUsesNonExemptEncryption = false.
 Support: icacon2026@gmail.com
+```
+
+### Resolution Center replies (paste into App Store Connect)
+
+Paste each block as a reply to the corresponding guideline, or send one combined reply.
+
+#### Guideline 4 — Design (Apple Maps)
+
+```
+Thank you for the feedback. We have revised the app so that every location / venue action presents a choice of maps apps, with Apple Maps listed first.
+
+On iOS, tapping a venue (Navigate tab, Programme venues, or Info → Venue) shows:
+• Apple Maps — opens the native Apple Maps app
+• Google Maps — optional third-party option
+
+This is included in the new binary we are submitting for review. Please use the Navigate tab with network access to verify.
+```
+
+#### Guideline 2.1(a) — Demo account / access
+
+```
+Thank you for the review. ICACON 2026 Companion does not use accounts, login, or authentication of any kind. There is no username or password to provide.
+
+All features and functionality are available immediately after installing the app, with no demo account required:
+
+• Home, Programme (including offline Day 1 / Day 2 PDFs and brochure)
+• Navigate (venue list and maps chooser)
+• Info (contacts, website, privacy, external Register link)
+
+Please test without signing in. If any screen appears blocked, that is unexpected — contact us at icacon2026@gmail.com and we will assist immediately.
+```
+
+#### Guideline 2.1(b) — Business model questions
+
+```
+Thank you. Here are detailed answers about our business model:
+
+1. Who are the users that will use the paid content in the app?
+There is no paid content inside the app. The app is free for all users (delegates, faculty, and anyone interested in ICACON 2026). Fees mentioned in the app refer only to attending the physical conference / workshops in Aligarh, not to digital goods in the app.
+
+2. Where can users purchase the content that can be accessed in the app?
+Users do not purchase anything in or through the app for app access. Optional conference registration is completed only on the external website (https://www.icaconaligarh.com and the eregnow ticketing link). The app’s “Register” button opens that external site in the browser. No purchase happens in the app.
+
+3. What specific types of previously purchased content can a user access in the app?
+None. The app does not unlock, restore, or display previously purchased digital content. Programme PDFs, workshop info, contacts, and venue maps are free for everyone.
+
+4. What paid content, subscriptions, or features are unlocked within the app that do not use In-App Purchase?
+None. There are no subscriptions, premium tiers, or paid feature unlocks in the app. Workshop fee amounts shown (e.g. ₹4,000) are informational only for the real-world event.
+
+5. How do users obtain an account? Do users have to pay a fee to create an account?
+Users do not create an account in this app. The app has no accounts. Optional conference registration accounts, if any, exist only on the external ticketing website and are not required to use this companion app. There is no fee to install or use the app.
 ```
 
 ---

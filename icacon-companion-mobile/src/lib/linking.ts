@@ -2,6 +2,7 @@ import { Alert, AppState, Linking, Platform, type AppStateStatus } from 'react-n
 import * as WebBrowser from 'expo-web-browser'
 import NetInfo from '@react-native-community/netinfo'
 import { VENUE_MAPS } from '../data/events'
+import type { MapLinks } from '../data/types'
 
 /**
  * Open tel: / mailto:.
@@ -158,11 +159,12 @@ export async function openExternal(url: string): Promise<void> {
     return
   }
 
-  // Native map schemes always leave the app.
+  // Native map schemes / Apple Maps URLs always leave the app (not in-app browser).
   if (
     url.startsWith('geo:') ||
     url.startsWith('maps:') ||
-    url.startsWith('comgooglemaps:')
+    url.startsWith('comgooglemaps:') ||
+    isAppleMapsUrl(url)
   ) {
     if (!(await ensureOnline())) return
     try {
@@ -178,19 +180,56 @@ export async function openExternal(url: string): Promise<void> {
   await openInAppBrowser(url)
 }
 
-/** Pick JNMC or Lemon Tree → Google Maps (in-app sheet; Maps app if handed off). */
+function isAppleMapsUrl(url: string): boolean {
+  return (
+    url.startsWith('https://maps.apple.com/') ||
+    url.startsWith('http://maps.apple.com/')
+  )
+}
+
+/**
+ * Open a venue in a maps app.
+ * On iOS, always offer Apple Maps first (App Store Design guideline 4), plus Google Maps.
+ * On Android, open Google Maps directly.
+ */
+export function openMaps(destination: MapLinks, placeName?: string): void {
+  const title = placeName ? `Open ${placeName}` : 'Open in Maps'
+
+  if (Platform.OS === 'ios') {
+    Alert.alert(title, 'Choose a maps app', [
+      {
+        text: 'Apple Maps',
+        onPress: () => {
+          void openExternal(destination.appleMapsUrl)
+        },
+      },
+      {
+        text: 'Google Maps',
+        onPress: () => {
+          void openExternal(destination.googleMapsUrl)
+        },
+      },
+      { text: 'Cancel', style: 'cancel' },
+    ])
+    return
+  }
+
+  void openExternal(destination.googleMapsUrl)
+}
+
+/** Pick JNMC or Lemon Tree, then open with map-app chooser on iOS. */
 export function openVenuePicker(): void {
   Alert.alert('Open venue in Maps', undefined, [
     {
       text: 'JNMC (workshops · 11 Sept)',
       onPress: () => {
-        void openExternal(VENUE_MAPS.jnmc)
+        openMaps(VENUE_MAPS.jnmc, 'JNMC')
       },
     },
     {
       text: 'Lemon Tree (conference · 12–13 Sept)',
       onPress: () => {
-        void openExternal(VENUE_MAPS.lemonTree)
+        openMaps(VENUE_MAPS.lemonTree, 'Lemon Tree')
       },
     },
     { text: 'Cancel', style: 'cancel' },

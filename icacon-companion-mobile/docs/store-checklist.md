@@ -25,7 +25,15 @@
 
 ### Review notes tip (optional in App Store Connect)
 
-> Offline conference companion. No login. Test maps with network on; PDFs and programme work offline. Support: icacon2026@gmail.com
+> Offline conference companion. No login / no demo account. On iOS, venue taps offer Apple Maps first, then Google Maps. Test maps online; PDFs offline. No IAP — registration fees are external website only. Support: icacon2026@gmail.com
+
+### App Review rejection (Aug 2026) — checklist
+
+| Guideline | Fix |
+|---|---|
+| **4 Design** | Code: iOS maps chooser (Apple Maps + Google Maps). Resubmit binary. |
+| **2.1(a)** | Reply: no login; leave demo fields blank; paste notes from `docs/app-store-listing-copy.md` |
+| **2.1(b)** | Reply: free app, no IAP; fees are physical conference only via external website |
 
 ---
 
