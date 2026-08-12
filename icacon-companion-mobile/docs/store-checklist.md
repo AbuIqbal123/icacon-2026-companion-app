@@ -58,7 +58,8 @@
 - [x] **iOS iPad 13" screenshots** — `docs/app-store-assets/screenshots-ipad-13/` (Home + Navigate; optional while `supportsTablet: false`)  
 - [x] **Android screenshots** — `docs/play-store-assets/`  
 - [ ] `eas build --profile production --platform ios` (not development/preview for store)  
-- [ ] Official day1/day2 PDFs if current files are drafts  
+- [x] Official day1/day2 programme PDFs (assets/pdfs/day1-programme.pdf, day2-programme.pdf)  
+- [ ] App Store version **1.0.1** — What’s New copy in `docs/app-store-listing-copy.md`
 
 ### iOS App Store Connect (summary)
 

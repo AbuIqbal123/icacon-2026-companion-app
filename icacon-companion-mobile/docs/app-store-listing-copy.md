@@ -39,10 +39,10 @@ Workshops, PDFs, maps, contacts
 ## Promotional text (max 170, optional — editable without new binary)
 
 ```
-Official-style companion for ICACON 2026 in Aligarh (11–13 Sept). Workshops, programme PDFs, and contacts work offline. Free. No account.
+ICACON 2026 in Aligarh (11–13 Sept). Workshops, latest programme PDFs, and contacts — offline when you need them. Free. No account.
 ```
 
-(148 / 170 characters)
+(132 / 170 characters)
 
 ---
 
@@ -107,6 +107,47 @@ Initial release of ICACON 2026 Companion.
 • Brochure and Day 1 / Day 2 PDFs
 • Secretariat and registration contacts
 • Maps links for venues (when online)
+```
+
+---
+
+## What's New (Version 1.0.1) *
+
+Paste into **App Store Connect → 1.0.1 → What's New** (max 4000).
+
+```
+Thanks for using ICACON 2026 Companion!
+
+This update refreshes the offline Day 1 and Day 2 scientific programme so it matches the latest official conference schedule — halls, sessions, speakers, and timings.
+
+• Updated Day 1 programme PDF (12 September)
+• Updated Day 2 programme PDF (13 September)
+• Clearer loading of programme files after updates
+
+See you in Aligarh, 11–13 September 2026.
+```
+
+---
+
+## App Review notes (1.0.1 — optional reply / notes field)
+
+```
+ICACON 2026 Companion — version 1.0.1
+
+This is a content update for an offline-first conference companion (Aligarh, 11–13 September 2026).
+
+What changed: official Day 1 and Day 2 scientific programme PDFs updated to the latest schedule.
+
+No login or account is required. Core features work offline:
+• Home — workshop list
+• Programme — workshop day schedule + brochure / Day 1 / Day 2 PDFs
+• Info — secretariat and registration contacts (tel / mailto)
+• Navigate — venue list; Maps opens when online
+
+Maps and website links need network; offline use shows a clear alert.
+Export compliance: HTTPS only; ITSAppUsesNonExemptEncryption = false.
+Support: icacon2026@gmail.com · https://www.icaconaligarh.com
+Privacy: https://abuiqbal123.github.io/icacon-privacy/
 ```
 
 ---
