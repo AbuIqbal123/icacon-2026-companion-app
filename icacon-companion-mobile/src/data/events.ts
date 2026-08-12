@@ -213,7 +213,11 @@ export const OFFLINE_INFO = {
   ],
 }
 
-/** Bundled PDF modules — replace files in assets/pdfs/ with official downloads. */
+/**
+ * Bundled PDF modules — replace files in assets/pdfs/ with official downloads.
+ * Filenames include "-programme" so OTA asset IDs change when schedules update
+ * (avoids App Store builds forever serving a first-launch cache of day1.pdf / day2.pdf).
+ */
 export const PDF_ASSETS: Record<PdfId, { title: string; module: number }> = {
   brochure: {
     title: 'ICACON Brochure',
@@ -221,10 +225,10 @@ export const PDF_ASSETS: Record<PdfId, { title: string; module: number }> = {
   },
   day1: {
     title: 'Day 1 Programme',
-    module: require('../../assets/pdfs/day1.pdf'),
+    module: require('../../assets/pdfs/day1-programme.pdf'),
   },
   day2: {
     title: 'Day 2 Programme',
-    module: require('../../assets/pdfs/day2.pdf'),
+    module: require('../../assets/pdfs/day2-programme.pdf'),
   },
 }

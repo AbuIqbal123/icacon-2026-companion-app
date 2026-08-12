@@ -11,6 +11,12 @@ const FLAG_GRANT_READ_URI_PERMISSION = 1
 /** Intent.FLAG_ACTIVITY_NEW_TASK */
 const FLAG_ACTIVITY_NEW_TASK = 0x10000000
 
+/**
+ * Bump when programme PDFs change so every client re-copies into cache,
+ * even if expo-asset hash is missing or sticky.
+ */
+const PDF_CACHE_REV = '2026-09-prog-v2'
+
 export async function resolvePdfUri(id: PdfId): Promise<string | null> {
   try {
     const asset = Asset.fromModule(PDF_ASSETS[id].module)
@@ -18,24 +24,27 @@ export async function resolvePdfUri(id: PdfId): Promise<string | null> {
     const uri = asset.localUri ?? asset.uri
     if (!uri) return null
 
-    // Land on a cache file://…/*.pdf for Android content URIs / system viewers.
-    // Include asset hash in the filename so OTA PDF updates bust the cache
-    // (a fixed icacon-day1.pdf path would keep serving the first-opened version forever).
     const base = FileSystem.cacheDirectory
     if (!base) {
       return uri
     }
 
-    const hash = asset.hash ?? 'v'
-    const dest = `${base}icacon-${id}-${hash}.pdf`
-    if (uri === dest) return dest
+    // Hash + rev in path so OTA and manual PDF refreshes never reuse a stale file.
+    const hash = asset.hash ?? 'asset'
+    const dest = `${base}icacon-${id}-${PDF_CACHE_REV}-${hash}.pdf`
 
-    const info = await FileSystem.getInfoAsync(dest)
-    if (!info.exists) {
-      // Best-effort: drop the old unhashed cache name from earlier app versions
-      await FileSystem.deleteAsync(`${base}icacon-${id}.pdf`, { idempotent: true })
-      await FileSystem.copyAsync({ from: uri, to: dest })
+    // Always refresh from the current bundled/OTA asset (files are ~100KB).
+    await FileSystem.deleteAsync(dest, { idempotent: true })
+    // Drop legacy cache names from earlier app versions
+    await FileSystem.deleteAsync(`${base}icacon-${id}.pdf`, { idempotent: true })
+    await FileSystem.deleteAsync(`${base}icacon-${id}-v.pdf`, { idempotent: true })
+    if (asset.hash) {
+      await FileSystem.deleteAsync(`${base}icacon-${id}-${asset.hash}.pdf`, {
+        idempotent: true,
+      })
     }
+
+    await FileSystem.copyAsync({ from: uri, to: dest })
     return dest
   } catch {
     return null
