@@ -18,23 +18,22 @@ export async function resolvePdfUri(id: PdfId): Promise<string | null> {
     const uri = asset.localUri ?? asset.uri
     if (!uri) return null
 
-    // Always land on a stable cache file://…/*.pdf for Android viewers
+    // Land on a cache file://…/*.pdf for Android content URIs / system viewers.
+    // Include asset hash in the filename so OTA PDF updates bust the cache
+    // (a fixed icacon-day1.pdf path would keep serving the first-opened version forever).
     const base = FileSystem.cacheDirectory
     if (!base) {
-      if (uri.startsWith('file://') && uri.toLowerCase().endsWith('.pdf')) {
-        return uri
-      }
       return uri
     }
 
-    const dest = `${base}icacon-${id}.pdf`
-    if (uri.startsWith('file://') && uri.toLowerCase().endsWith('.pdf')) {
-      // Still copy if source is ephemeral asset path without our name
-      if (uri === dest) return dest
-    }
+    const hash = asset.hash ?? 'v'
+    const dest = `${base}icacon-${id}-${hash}.pdf`
+    if (uri === dest) return dest
 
     const info = await FileSystem.getInfoAsync(dest)
     if (!info.exists) {
+      // Best-effort: drop the old unhashed cache name from earlier app versions
+      await FileSystem.deleteAsync(`${base}icacon-${id}.pdf`, { idempotent: true })
       await FileSystem.copyAsync({ from: uri, to: dest })
     }
     return dest
