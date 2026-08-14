@@ -46,7 +46,9 @@
 - [x] Encryption flag + privacy manifest  
 - [x] Blocked unused Android permissions  
 - [x] Store-ready iOS plugin (no Dev Launcher local network copy)  
-- [x] Release minify/shrink for Android  
+- [x] Release minify/shrink for Android (`expo-build-properties` R8 + shrinkResources)  
+- [x] Android large screens: no portrait / resize lock (`orientation: default` + Play quality plugin)  
+- [x] iOS stays portrait-only via `UISupportedInterfaceOrientations`  
 
 ## You complete before submit
 

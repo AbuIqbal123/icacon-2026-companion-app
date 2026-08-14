@@ -153,15 +153,15 @@ Upload **at least 2** per tablet size (4 recommended). Do **not** use iPhone scr
 
 ---
 
-## Production release notes (version 1.0.0 / versionCode 6)
+## Production release notes (version 1.0.0 / versionCode 7)
 
 Paste into **Play Console → Production → Releases → Release notes** if EAS does not prefill them:
 
 ```
-Official ICACON 2026 Companion for Aligarh (11–13 September).
+Initial release of ICACON 2026 Companion for Aligarh (11–13 September).
 
-• Workshop list and workshop-day schedule (offline)
-• Brochure plus Day 1 and Day 2 programme PDFs (offline)
+• Offline workshop list and workshop-day schedule
+• Brochure plus official Day 1 and Day 2 programme PDFs
 • Secretariat and registration contacts
 • Venue and workshop locations open in Maps when online
 
