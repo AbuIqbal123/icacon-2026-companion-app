@@ -59,6 +59,7 @@
 - [x] **Android screenshots** — `docs/play-store-assets/`  
 - [ ] `eas build --profile production --platform ios` (not development/preview for store)  
 - [x] Official day1/day2 programme PDFs (assets/pdfs/day1-programme.pdf, day2-programme.pdf)  
+- [x] **Android production AAB versionCode 6** submitted to Play production (EAS build `bbb3fd60`, submit `c0e762e2`)  
 - [ ] App Store version **1.0.1** — What’s New copy in `docs/app-store-listing-copy.md`
 
 ### iOS App Store Connect (summary)
@@ -177,11 +178,13 @@ Testers only need a normal Google account + Android device. They do **not** need
 
 ### 4. Apply for production
 
-After the closed-test criteria are green:
+Closed testing is done and Play production is unlocked.
 
-1. Dashboard → **Apply for production** (or Production → apply)  
-2. Answer questions about who tested, what feedback you got, how you fixed issues  
-3. Create a **Production** release (same or newer AAB), submit for review  
+Current production binary: **1.0.0 (versionCode 6)** — official Day 1 / Day 2 programmes embedded.
+
+1. EAS production AAB `bbb3fd60` (1.0.0 / versionCode 6) finished  
+2. Submitted to Play **production** (`c0e762e2`, release status completed)  
+3. Confirm in Play Console → **Production** that the release is **In review**  
 
 Honest short answers work, e.g.:
 

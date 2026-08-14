@@ -149,4 +149,21 @@ Upload **at least 2** per tablet size (4 recommended). Do **not** use iPhone scr
 2. Upload **feature-graphic-1024x500.png**  
 3. Upload **2–8 phone screenshots** (aim for 4–5)  
 4. Save  
-5. Return to Dashboard and clear remaining setup tasks  
+5. Return to Dashboard and clear remaining setup tasks
+
+---
+
+## Production release notes (version 1.0.0 / versionCode 6)
+
+Paste into **Play Console → Production → Releases → Release notes** if EAS does not prefill them:
+
+```
+Official ICACON 2026 Companion for Aligarh (11–13 September).
+
+• Workshop list and workshop-day schedule (offline)
+• Brochure plus Day 1 and Day 2 programme PDFs (offline)
+• Secretariat and registration contacts
+• Venue and workshop locations open in Maps when online
+
+No account. No ads. No tracking.
+```  
