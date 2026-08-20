@@ -1,0 +1,81 @@
+# Publishes an EAS Update (OTA) to store builds.
+#
+# Holiday path: Grok (phone) opens a PR → you merge to master → this job runs.
+# Manual path: GitHub → Actions → Publish OTA → Run workflow.
+#
+# Requires repository secret EXPO_TOKEN (expo.dev/settings/access-tokens).
+# Must use --channel production (not --auto): git branch is master, EAS branch is production.
+name: Publish OTA
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'app/**'
+      - 'src/**'
+      - 'assets/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'app.json'
+      - 'eas.json'
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: EAS Update channel
+        type: choice
+        options:
+          - production
+          - preview
+        default: production
+      message:
+        description: Update message (defaults to the commit subject)
+        required: false
+        type: string
+
+concurrency:
+  group: ota-${{ github.event.inputs.channel || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish EAS Update
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo '::error::Add repository secret EXPO_TOKEN. Create a token at https://expo.dev/settings/access-tokens then add it under Settings → Secrets and variables → Actions.'
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Publish update
+        env:
+          CHANNEL: ${{ github.event.inputs.channel || 'production' }}
+          UPDATE_MESSAGE: ${{ github.event.inputs.message || github.event.head_commit.message }}
+        run: |
+          MESSAGE="$(printf '%s\n' "${UPDATE_MESSAGE:-$GITHUB_SHA}" | head -n 1)"
+          eas update --channel "$CHANNEL" --environment "$CHANNEL" --message "$MESSAGE" --non-interactive
