@@ -14,8 +14,9 @@ const FLAG_ACTIVITY_NEW_TASK = 0x10000000
 /**
  * Bump when programme PDFs change so every client re-copies into cache,
  * even if expo-asset hash is missing or sticky.
+ * Current: full visual day1/day2 programmes (Aug 2026)
  */
-const PDF_CACHE_REV = '2026-09-prog-v2'
+const PDF_CACHE_REV = '2026-08-24-prog-v3'
 
 export async function resolvePdfUri(id: PdfId): Promise<string | null> {
   try {
@@ -33,7 +34,7 @@ export async function resolvePdfUri(id: PdfId): Promise<string | null> {
     const hash = asset.hash ?? 'asset'
     const dest = `${base}icacon-${id}-${PDF_CACHE_REV}-${hash}.pdf`
 
-    // Always refresh from the current bundled/OTA asset (files are ~100KB).
+    // Always refresh from the current bundled/OTA asset.
     await FileSystem.deleteAsync(dest, { idempotent: true })
     // Drop legacy cache names from earlier app versions
     await FileSystem.deleteAsync(`${base}icacon-${id}.pdf`, { idempotent: true })
