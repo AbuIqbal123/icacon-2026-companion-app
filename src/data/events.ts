@@ -110,9 +110,7 @@ export const WORKSHOP_VENUE_MAPS = {
 /** POCUS — Simulation Lab (Old OPD Complex, near ART Centre), JNMC. */
 export const SIMULATION_LAB_MAPS = {
   googleMapsUrl: 'https://maps.app.goo.gl/5o6osyGMvjkY4cfW9?g_st=ic',
-  appleMapsUrl: appleMapsQuery(
-    'Anti Retroviral Therapy Centre, JNMC AMU, Aligarh, Uttar Pradesh 202001',
-  ),
+  appleMapsUrl: 'https://maps.apple/p/uDCXH~0AJ1dAwy',
 } as const satisfies MapLinks
 
 /** USG Regional — Surgery OT Complex (near Dept of Anaesthesia). */
