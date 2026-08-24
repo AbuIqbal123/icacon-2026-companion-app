@@ -181,9 +181,12 @@ export async function openExternal(url: string): Promise<void> {
 }
 
 function isAppleMapsUrl(url: string): boolean {
+  // maps.apple.com/?q=...  and short place links maps.apple/p/...
   return (
     url.startsWith('https://maps.apple.com/') ||
-    url.startsWith('http://maps.apple.com/')
+    url.startsWith('http://maps.apple.com/') ||
+    url.startsWith('https://maps.apple/') ||
+    url.startsWith('http://maps.apple/')
   )
 }
 
