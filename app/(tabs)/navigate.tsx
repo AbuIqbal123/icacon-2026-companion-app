@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { ChevronRight, MapPin } from 'lucide-react-native'
 import {
   EVENT_META,
+  SIMULATION_LAB_MAPS,
   USG_REGIONAL_MAPS,
   VENUE_MAPS,
   WORKSHOP_VENUE_MAPS,
@@ -33,7 +34,7 @@ const WORKSHOP_SITES: Place[] = [
   {
     id: 'paramedical',
     title: 'Paramedical College',
-    meta: 'Airway · POCUS · Ventilation · Obstetrics',
+    meta: 'Airway · Ventilation · Obstetrics',
     maps: WORKSHOP_VENUE_MAPS,
   },
   {
@@ -41,6 +42,12 @@ const WORKSHOP_SITES: Place[] = [
     title: 'Surgery OT Complex',
     meta: 'Near Dept of Anaesthesia · USG Regional',
     maps: USG_REGIONAL_MAPS,
+  },
+  {
+    id: 'simulation',
+    title: 'Simulation Lab, JNMC',
+    meta: 'Old OPD Complex · Near ART Centre · POCUS',
+    maps: SIMULATION_LAB_MAPS,
   },
 ]
 
