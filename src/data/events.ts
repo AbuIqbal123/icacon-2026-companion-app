@@ -111,7 +111,7 @@ export const WORKSHOP_VENUE_MAPS = {
 export const SIMULATION_LAB_MAPS = {
   googleMapsUrl: 'https://maps.app.goo.gl/5o6osyGMvjkY4cfW9?g_st=ic',
   appleMapsUrl: appleMapsQuery(
-    'Simulation Lab, Old OPD Complex, JNMC Aligarh, Near Anti Retroviral Therapy Centre',
+    'Anti Retroviral Therapy Centre, JNMC AMU, Aligarh, Uttar Pradesh 202001',
   ),
 } as const satisfies MapLinks
 
