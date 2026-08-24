@@ -99,11 +99,19 @@ export const WORKSHOP_DAY = {
   fee: '₹4,000',
 } as const
 
-/** Four workshops (Airway, POCUS, Ventilation, Obstetrics) — Paramedical College. */
+/** Airway, Ventilation, Obstetrics — Paramedical College. */
 export const WORKSHOP_VENUE_MAPS = {
   googleMapsUrl: 'https://maps.app.goo.gl/BWgH6jRMjLnwkysM6',
   appleMapsUrl: appleMapsQuery(
     'Paramedical College, Jawaharlal Nehru Medical College, AMU Aligarh',
+  ),
+} as const satisfies MapLinks
+
+/** POCUS — Simulation Lab (Old OPD Complex), JNMC. */
+export const SIMULATION_LAB_MAPS = {
+  googleMapsUrl: 'https://maps.app.goo.gl/uXS29KWGHc5QdaB66',
+  appleMapsUrl: appleMapsQuery(
+    'Skills and Simulation Lab, Old OPD Complex, Jawaharlal Nehru Medical College, AMU Aligarh',
   ),
 } as const satisfies MapLinks
 
@@ -147,9 +155,10 @@ export const WORKSHOPS: Workshop[] = [
     title: 'Point of Care Ultrasound (POCUS)',
     director: 'Prof. Poonam Malhotra',
     fee: '₹4,000',
-    venueLabel: 'Paramedical College',
-    maps: WORKSHOP_VENUE_MAPS,
-    sharedSite: true,
+    venueLabel: 'Simulation Lab, JNMC',
+    venueNote: 'Old OPD Complex',
+    maps: SIMULATION_LAB_MAPS,
+    sharedSite: false,
   },
   {
     id: 'vent',
