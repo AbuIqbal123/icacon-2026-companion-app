@@ -107,11 +107,11 @@ export const WORKSHOP_VENUE_MAPS = {
   ),
 } as const satisfies MapLinks
 
-/** POCUS — Simulation Lab (Old OPD Complex), JNMC. */
+/** POCUS — Simulation Lab (Old OPD Complex, near ART Centre), JNMC. */
 export const SIMULATION_LAB_MAPS = {
-  googleMapsUrl: 'https://maps.app.goo.gl/uXS29KWGHc5QdaB66',
+  googleMapsUrl: 'https://maps.app.goo.gl/5o6osyGMvjkY4cfW9?g_st=ic',
   appleMapsUrl: appleMapsQuery(
-    'Skills and Simulation Lab, Old OPD Complex, Jawaharlal Nehru Medical College, AMU Aligarh',
+    'Simulation Lab, Old OPD Complex, JNMC Aligarh, Near Anti Retroviral Therapy Centre',
   ),
 } as const satisfies MapLinks
 
@@ -156,7 +156,7 @@ export const WORKSHOPS: Workshop[] = [
     director: 'Prof. Poonam Malhotra',
     fee: '₹4,000',
     venueLabel: 'Simulation Lab, JNMC',
-    venueNote: 'Old OPD Complex',
+    venueNote: 'Old OPD Complex · Near ART Centre',
     maps: SIMULATION_LAB_MAPS,
     sharedSite: false,
   },
