@@ -206,6 +206,12 @@ export default function ProgrammeScreen() {
                 detail="Near Dept of Anaesthesia · USG Regional"
                 maps={WORKSHOPS.find((w) => w.id === 'blocks')!.maps}
               />
+              <View style={styles.venueDivider} />
+              <VenueRow
+                name="Simulation Lab, JNMC"
+                detail="Old OPD Complex · Near ART Centre · POCUS"
+                maps={WORKSHOPS.find((w) => w.id === 'pocus')!.maps}
+              />
             </View>
 
             <Resources />
