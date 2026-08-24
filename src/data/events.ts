@@ -43,7 +43,7 @@ export const EVENT_META = {
 }
 
 /**
- * Venue map destinations — Google short links + Apple Maps queries.
+ * Venue map destinations — Google short links + Apple Maps place links / queries.
  * iOS shows a chooser so users can open native Apple Maps (App Store guideline 4).
  */
 export const VENUE_MAPS = {
@@ -55,7 +55,7 @@ export const VENUE_MAPS = {
   },
   lemonTree: {
     googleMapsUrl: 'https://maps.app.goo.gl/TzJznfYVW3rAj5Y6A',
-    appleMapsUrl: appleMapsQuery('Lemon Tree Hotel, Aligarh, Uttar Pradesh'),
+    appleMapsUrl: 'https://maps.apple/p/Zqtc1DTSCdjmpJ',
   },
 } as const satisfies Record<string, MapLinks>
 
