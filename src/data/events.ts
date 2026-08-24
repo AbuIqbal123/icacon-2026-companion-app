@@ -42,6 +42,9 @@ export const EVENT_META = {
   theme: 'Towards Smarter Anaesthesia: Integrating Technology, Intelligence & Precision',
 }
 
+/** Shared Apple Maps place link for all JNMC / 11 Sept workshop locations. */
+const JNMC_APPLE_MAPS = 'https://maps.apple/p/uDCXH~0AJ1dAwy'
+
 /**
  * Venue map destinations — Google short links + Apple Maps place links / queries.
  * iOS shows a chooser so users can open native Apple Maps (App Store guideline 4).
@@ -49,9 +52,7 @@ export const EVENT_META = {
 export const VENUE_MAPS = {
   jnmc: {
     googleMapsUrl: 'https://maps.app.goo.gl/uXS29KWGHc5QdaB66',
-    appleMapsUrl: appleMapsQuery(
-      'Jawaharlal Nehru Medical College, AMU Aligarh, Uttar Pradesh',
-    ),
+    appleMapsUrl: JNMC_APPLE_MAPS,
   },
   lemonTree: {
     googleMapsUrl: 'https://maps.app.goo.gl/TzJznfYVW3rAj5Y6A',
@@ -102,23 +103,19 @@ export const WORKSHOP_DAY = {
 /** Airway, Ventilation, Obstetrics — Paramedical College. */
 export const WORKSHOP_VENUE_MAPS = {
   googleMapsUrl: 'https://maps.app.goo.gl/BWgH6jRMjLnwkysM6',
-  appleMapsUrl: appleMapsQuery(
-    'Paramedical College, Jawaharlal Nehru Medical College, AMU Aligarh',
-  ),
+  appleMapsUrl: JNMC_APPLE_MAPS,
 } as const satisfies MapLinks
 
 /** POCUS — Simulation Lab (Old OPD Complex, near ART Centre), JNMC. */
 export const SIMULATION_LAB_MAPS = {
   googleMapsUrl: 'https://maps.app.goo.gl/5o6osyGMvjkY4cfW9?g_st=ic',
-  appleMapsUrl: 'https://maps.apple/p/uDCXH~0AJ1dAwy',
+  appleMapsUrl: JNMC_APPLE_MAPS,
 } as const satisfies MapLinks
 
 /** USG Regional — Surgery OT Complex (near Dept of Anaesthesia). */
 export const USG_REGIONAL_MAPS = {
   googleMapsUrl: 'https://maps.app.goo.gl/2kF68afduK8JVnHq7?g_st=ic',
-  appleMapsUrl: appleMapsQuery(
-    'Department of Anaesthesiology, Jawaharlal Nehru Medical College, AMU Aligarh',
-  ),
+  appleMapsUrl: JNMC_APPLE_MAPS,
 } as const satisfies MapLinks
 
 export const USG_REGIONAL_VENUE = 'Surgery OT Complex' as const
