@@ -16,7 +16,7 @@ const FLAG_ACTIVITY_NEW_TASK = 0x10000000
  * even if expo-asset hash is missing or sticky.
  * Current: official programme + Hall C restyle (Sep 2026)
  */
-const PDF_CACHE_REV = '2026-09-03-prog-v4'
+const PDF_CACHE_REV = '2026-09-03-prog-v5'
 
 export async function resolvePdfUri(id: PdfId): Promise<string | null> {
   try {
