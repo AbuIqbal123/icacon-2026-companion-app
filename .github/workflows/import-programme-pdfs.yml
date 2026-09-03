@@ -1,0 +1,53 @@
+name: Import programme PDFs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    name: Download and commit programme PDFs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download official Day 1 and Day 2 PDFs
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o assets/pdfs/day1-programme.pdf \
+            "https://tmpfiles.org/dl/1788458776.1313ffc783067473/wKwjh2RgVP2G/day1-programme.pdf"
+          curl -L --fail --retry 3 -o assets/pdfs/day2-programme.pdf \
+            "https://tmpfiles.org/dl/1788458783.2c4ce1cc80e45699/wDwFh6RzL4if/day2-programme.pdf"
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ('day1-programme.pdf', 'day2-programme.pdf'):
+              p = Path('assets/pdfs') / name
+              data = p.read_bytes()
+              if not data.startswith(b'%PDF'):
+                  raise SystemExit(f'{name} is not a PDF (got {data[:20]!r})')
+              print(name, len(data))
+          p = Path('src/lib/pdfs.ts')
+          t = p.read_text()
+          old = "const PDF_CACHE_REV = '2026-09-03-prog-v4'"
+          new = "const PDF_CACHE_REV = '2026-09-03-prog-v5'"
+          if old not in t:
+              raise SystemExit('PDF_CACHE_REV v4 not found')
+          p.write_text(t.replace(old, new, 1))
+          print('bumped PDF_CACHE_REV to v5')
+          PY
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "Abu Baker Iqbal"
+          git config user.email "73901734+AbuIqbal123@users.noreply.github.com"
+          git add assets/pdfs/day1-programme.pdf assets/pdfs/day2-programme.pdf src/lib/pdfs.ts
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git commit -m "Replace Day 1 and Day 2 official programme PDFs"
+          git push
