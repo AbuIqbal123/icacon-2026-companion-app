@@ -14,9 +14,9 @@ const FLAG_ACTIVITY_NEW_TASK = 0x10000000
 /**
  * Bump when programme PDFs change so every client re-copies into cache,
  * even if expo-asset hash is missing or sticky.
- * Current: full visual day1/day2 programmes (Aug 2026)
+ * Current: official programme + Hall C restyle (Sep 2026)
  */
-const PDF_CACHE_REV = '2026-08-24-prog-v3'
+const PDF_CACHE_REV = '2026-09-03-prog-v4'
 
 export async function resolvePdfUri(id: PdfId): Promise<string | null> {
   try {
